@@ -1,0 +1,307 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cantier.demo/schemas/ui-config-v2.json",
+  "title": "UIConfigV2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "children", "queries"],
+  "properties": {
+    "type": { "const": "MesPage" },
+    "title": { "type": "string" },
+
+    "queries": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 12,
+      "additionalProperties": { "$ref": "#/$defs/QueryV2" },
+      "description": "Map of queryKey -> QueryV2. Frontend executes these queries and injects results into components via ValueRefV1/queryKey."
+    },
+
+    "children": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 6,
+      "items": { "$ref": "#/$defs/DashboardChild" }
+    }
+  },
+
+  "$defs": {
+    "DashboardChild": {
+      "oneOf": [
+        { "$ref": "#/$defs/CantierDashBoardCard" },
+        { "$ref": "#/$defs/CantierSecondaryCard" },
+        { "$ref": "#/$defs/CantierDataGrid" }
+      ]
+    },
+
+    "ValueRefV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["queryKey"],
+      "properties": {
+        "queryKey": {
+          "type": "string",
+          "description": "Key of a query defined in top-level 'queries'"
+        },
+        "path": {
+          "type": "string",
+          "description": "Simple path into the query response. Examples: 'value', 'rows', 'summary.oee'.Frontend resolver default:path='value'"
+        },
+        "fallback": {
+          "type": ["string", "number", "null"],
+          "description": "Optional fallback if value missing"
+        }
+      }
+    },
+
+    "QueryV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric", "timeRange"],
+      "properties": {
+        "metric": {
+          "type": "string",
+          "enum": ["OEE", "Availability", "Performance", "Quality", "DowntimeMinutes", "OutputQty"]
+        },
+        "timeRange": {
+          "type": "string",
+          "enum": ["24h", "7d", "30d", "custom"]
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Required when timeRange=custom (ISO 8601 date-time)"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Required when timeRange=custom (ISO 8601 date-time)"
+        },
+        "dimension": {
+          "type": "string",
+          "enum": ["line", "machine", "shift", "product", "reason"]
+        },
+        "filters": {
+          "type": "array",
+          "maxItems": 10,
+          "items": { "$ref": "#/$defs/FilterV1" }
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 500
+        },
+
+        "page": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Zero-based page index，the first page's index = 0"
+        },
+
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200,
+          "description": "Number of rows per page"
+        },
+
+        "orderBy": {
+          "type": "array",
+          "maxItems": 3,
+          "description": "Optional sorting. Use only when user explicitly requests sorting.",
+          "items": { "$ref": "#/$defs/OrderByV1" }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "timeRange": { "const": "custom" } },
+            "required": ["timeRange"]
+          },
+          "then": { "required": ["start", "end"] },
+          "else": {
+            "not": {
+              "anyOf": [{ "required": ["start"] }, { "required": ["end"] }]
+            }
+          }
+        },
+        {
+          "if": { "required": ["page"] },
+          "then": { "required": ["pageSize"] }
+        },
+        {
+          "if": { "required": ["pageSize"] },
+          "then": { "required": ["page"] }
+        },
+        {
+          "not": { "required": ["limit", "page"] }
+        }
+      ]
+    },
+
+    "OrderByV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "direction"],
+      "properties": {
+        "field": {
+          "type": "string",
+          "description": "Field name to sort by (backend-understood field or a semantic field your backend maps)."
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }
+      }
+    },
+
+    "FilterV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "op", "value"],
+      "properties": {
+        "field": {
+          "type": "string",
+          "enum": ["line", "machine", "shift", "product", "reason"]
+        },
+        "op": {
+          "type": "string",
+          "enum": ["=", "!=", "in", "contains", ">=", "<="]
+        },
+        "value": { "type": ["string", "number", "boolean", "array"] }
+      }
+    },
+
+    "CantierDashBoardCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "dashboardItems"],
+      "properties": {
+        "type": { "const": "CantierDashBoardCard" },
+
+        "hasIcon": {
+          "type": "boolean",
+          "default": true
+        },
+
+        "hasOption": {
+          "type": "boolean",
+          "default": true
+        },
+
+        "dashboardItems": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["label", "amount", "colorCode"],
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "KPI name displayed on the card"
+              },
+              "amount": {
+                "description": "KPI value OR a reference to query result via ValueRefV1",
+                "oneOf": [
+                  { "type": ["string", "number"] },
+                  { "$ref": "#/$defs/ValueRefV1" }
+                ]
+              },
+              "colorCode": {
+                "type": "string",
+                "enum": ["red", "blue", "green", "orange"]
+              },
+              "iconName": {
+                "type": "string",
+                "description": "Frontend maps iconName to actual React icon"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "CantierSecondaryCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "title", "subtitle", "value", "colorCode"],
+      "properties": {
+        "type": { "const": "CantierSecondaryCard" },
+
+        "title": { "type": "string", "minLength": 1 },
+        "subtitle": { "type": "string", "minLength": 0 },
+
+        "value": {
+          "description": "Card value OR a reference to query result via ValueRefV1",
+          "oneOf": [
+            { "type": ["string", "number"] },
+            { "$ref": "#/$defs/ValueRefV1" }
+          ]
+        },
+
+        "colorCode": {
+          "type": "string",
+          "enum": ["red", "blue", "green", "orange"],
+          "default": "red"
+        },
+
+        "className": { "type": "string" },
+
+        "iconName": {
+          "type": "string",
+          "description": "Frontend maps iconName to an actual ReactNode icon"
+        }
+      }
+    },
+
+    "CantierDataGrid": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "queryKey", "columns"],
+      "properties": {
+        "type": { "const": "CantierDataGrid" },
+
+        "id": { "type": "string" },
+
+        "title": { "type": "string" },
+
+        "queryKey": {
+          "type": "string",
+          "description": "Which query in top-level 'queries' supplies data for this grid"
+        },
+
+        "dataPath": {
+          "type": "string",
+          "description": "Path within that query's response that points to an array of rows. Example: 'rows'.Frontend resolver default:path='rows'"
+        },
+
+        "columns": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 30,
+          "items": { "$ref": "#/$defs/GridColumnV1" }
+        }
+      }
+    },
+
+    "GridColumnV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["header", "key"],
+      "properties": {
+        "header": { "type": "string" },
+        "key": {
+          "type": "string",
+          "description": "Field name in each row object"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["text", "number", "date", "datetime", "enum"],
+          "default": "text"
+        }
+      }
+    }
+  }
+}

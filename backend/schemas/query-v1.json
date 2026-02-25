@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cantier.demo/schemas/query-v1.json",
+  "title": "QueryV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["metric", "timeRange"],
+  "properties": {
+    "metric": {
+      "type": "string",
+      "enum": ["OEE", "Availability", "Performance", "Quality", "DowntimeMinutes", "OutputQty"]
+    },
+    "timeRange": {
+      "type": "string",
+      "enum": ["24h", "7d", "30d", "custom"]
+    },
+    "start": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Required when timeRange=custom (ISO 8601 date-time)"
+    },
+    "end": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Required when timeRange=custom (ISO 8601 date-time)"
+    },
+    "dimension": {
+      "type": "string",
+      "enum": ["line", "machine", "shift", "product", "reason"]
+    },
+    "filters": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "$ref": "#/$defs/FilterV1"
+      }
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 500
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "timeRange": { "const": "custom" } },
+        "required": ["timeRange"]
+      },
+      "then": {
+        "required": ["start", "end"]
+      },
+      "else": {
+        "not": {
+          "anyOf": [
+            { "required": ["start"] },
+            { "required": ["end"] }
+          ]
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "FilterV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "op", "value"],
+      "properties": {
+        "field": {
+          "type": "string",
+          "enum": ["line", "machine", "shift", "product", "reason"]
+        },
+        "op": {
+          "type": "string",
+          "enum": ["=", "!=", "in", "contains", ">=", "<="]
+        },
+        "value": {
+          "type": ["string", "number", "boolean", "array"]
+        }
+      }
+    }
+  }
+}

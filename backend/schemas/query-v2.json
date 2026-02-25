@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cantier.demo/schemas/query-v2.json",
+  "title": "QueryV2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["metric", "timeRange"],
+  "properties": {
+    "metric": {
+      "type": "string",
+      "enum": ["OEE", "Availability", "Performance", "Quality", "DowntimeMinutes", "OutputQty"]
+    },
+    "timeRange": {
+      "type": "string",
+      "enum": ["24h", "7d", "30d", "custom"]
+    },
+    "start": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Required when timeRange=custom (ISO 8601 date-time)"
+    },
+    "end": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Required when timeRange=custom (ISO 8601 date-time)"
+    },
+    "dimension": {
+      "type": "string",
+      "enum": ["line", "machine", "shift", "product", "reason"]
+    },
+    "filters": {
+      "type": "array",
+      "maxItems": 10,
+      "items": { "$ref": "#/$defs/FilterV1" }
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 500
+    },
+    "page": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Zero-based page index, the first page index = 0"
+    },
+    "pageSize": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 200,
+      "description": "Number of rows per page"
+    },
+    "orderBy": {
+      "type": "array",
+      "maxItems": 3,
+      "description": "Optional sorting. Use only when user explicitly requests sorting.",
+      "items": { "$ref": "#/$defs/OrderByV1" }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "timeRange": { "const": "custom" } },
+        "required": ["timeRange"]
+      },
+      "then": { "required": ["start", "end"] },
+      "else": {
+        "not": {
+          "anyOf": [{ "required": ["start"] }, { "required": ["end"] }]
+        }
+      }
+    },
+    {
+      "if": { "required": ["page"] },
+      "then": { "required": ["pageSize"] }
+    },
+    {
+      "if": { "required": ["pageSize"] },
+      "then": { "required": ["page"] }
+    },
+    {
+      "not": { "required": ["limit", "page"] }
+    }
+  ],
+  "$defs": {
+    "OrderByV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "direction"],
+      "properties": {
+        "field": {
+          "type": "string",
+          "description": "Field name to sort by (backend-understood field or a semantic field your backend maps)."
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }
+      }
+    },
+    "FilterV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "op", "value"],
+      "properties": {
+        "field": {
+          "type": "string",
+          "enum": ["line", "machine", "shift", "product", "reason"]
+        },
+        "op": {
+          "type": "string",
+          "enum": ["=", "!=", "in", "contains", ">=", "<="]
+        },
+        "value": { "type": ["string", "number", "boolean", "array"] }
+      }
+    }
+  }
+}
