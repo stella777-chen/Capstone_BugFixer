@@ -176,3 +176,8 @@ http://127.0.0.1:8000/docs
 You can test all API endpoints directly from the Swagger UI.
 
 可以直接测试 API。
+
+
+
+MOM Demo – Data Model & Synthetic Data Design(v1):
+https://docs.google.com/document/d/1TN7B7tRFx38kBkohVxwWzqCP3ayrDrKwK2MHfzfZ2L4/edit?tab=t.0
