@@ -1,183 +1,176 @@
-# Capstone_BugFixer
-Capstone repository
+Capstone_BugFixer – MOM Demo Backend
+Capstone repository – MOM Demo Backend (Schema-Constrained Architecture)
 
-1.MOM Demo Backend
+## 1. MOM Demo Backend
 
 FastAPI-based demo backend for:
 
- UI JSON validation (UIConfigV2)
+• UI JSON validation (UIConfigV3)
 
-Query JSON validation (QueryV2)
+• Query JSON validation (QueryMOMV1)
 
-Mock metric query execution
+• Mock MOM metric execution
 
-Rule-based UI generation (demo phase, no real LLM)
+• Rule-based UI generation (Demo phase, no real LLM yet)
 
-2.Project Structure
-
+## 2. Project Structure
 
 backend/
 
 │
 
-├── app.py
-
-├── app2.py                # Main FastAPI app
+├── app3.py                 # Main FastAPI app (MOM-only)
 
 ├── schemas/
 
-│   ├── ui-config-v2.json  # UI schema
+│   ├── ui-config-v3.json
 
-│   └── query-v2.json      # Query schema
+│   └── query-mom-v1.json
 
-├── venv/                  # Python virtual environment
+├── venv/
 
 └── README.md
 
-3.Environment Setup (Using Existing venv)
+## 3. Environment Setup
 
-(1)Activate Virtual Environment
-
-Windows (PowerShell)
-
+### Activate Virtual Environment:
+Windows (PowerShell): 
 .\venv\Scripts\activate
 
-Windows (cmd)
-
+Windows (cmd): 
 venv\Scripts\activate
 
-Mac / Linux
-
+Mac/Linux: 
 source venv/bin/activate
 
-If succeed,you will see:(venv) C:\...
+### Install Dependencies:
+pip install fastapi uvicorn jsonschema openai python-dotenv referencing
 
-(2)Install Dependencies (if not installed)
+## 4. Run Backend
 
-pip install fastapi uvicorn jsonschema
+### Start server using:
+uvicorn app3:app --reload
 
-Running app2.py (Recommended)
-
-Since your app2.py defines:
-
-app = FastAPI(...)
-
-The correct startup command is:
-
-uvicorn app2:app --reload
-
-Explanation:
-
-app2      -> Python file name (app2.py)
-
-app       -> FastAPI instance name inside the file
-
---reload  -> Enables auto-reload in development mode
-
-If successful, you should see:
-
+If successful, you will see:
 Uvicorn running on http://127.0.0.1:8000
-API Endpoints
 
-(1)Health Check
+## 5. API Endpoints
+
+### Health Check:
+
 GET /health
 
-Test in browser:
+Response: {"ok": true}
 
-http://127.0.0.1:8000/health
+### Validate UI JSON:
 
-Response:
-
-{
-  "ok": true
-}
-
-
-(2)Validate UI JSON
 POST /validate/ui
 
-This endpoint validates the payload using the ui-config-v2.json schema.
+Validates against schemas/ui-config-v3.json
 
-(3)Run Query
+### Run MOM Query
+
 POST /query
 
-This endpoint:
+Validates against schemas/query-mom-v1.json
 
-Validates the request using the QueryV2 schema
+Example Query – Scrap Rate
 
-Returns mock data for demo purposes
-
-Example Request
 {
-  "metric": "OEE",
-  "timeRange": "24h"
+
+    "metric": "ScrapRate",
+
+    "timeRange": "30d"
+
 }
 
-(4)Generate UI (Demo Mode)
+Example Query – Defect Distribution
+
+{
+
+    "metric": "DefectDistribution",
+
+    "timeRange": "30d",
+
+    "dimension": "defect_type"
+
+}
+
+## 6. Query Response Convention
+
+KPI → data.value
+
+Grid / Distribution → data.rows
+
+Example KPI Response
+
+{
+
+    "ok": true,
+
+    "data": {
+
+      "value": 2.8
+
+    },
+
+    "meta": {
+
+      "timeRange": "30d"
+
+    }
+
+}
+
+Example Distribution Response
+
+{
+
+    "ok": true,
+
+    "data": {
+
+      "rows": [
+
+        {
+
+          "defectCode": "Scratch",
+
+          "defectCount": 250,
+
+          "totalDefectPercentage": 25.0
+
+        }
+
+      ]
+
+    }
+
+}
+
+## 7. Generate UI (Demo Mode)
+
 POST /generate-ui
-Example Request
-{
-  "prompt": "show oee and downtime table"
-}
 
-The backend will:
-
-Generate queries based on the prompt
-
-Construct a MesPage JSON object
-
-Validate it against the UI schema
-
-Return a valid UIConfig
-
-4.Backend Logic Overview
-Validation
-
-The backend uses:
-
-jsonschema Draft202012Validator
-
-Schemas used:
-
-UI schema: schemas/ui-config-v2.json
-
-Query schema: schemas/query-v2.json
-
-5.Query Response Convention
-
-The backend follows this response structure:
-
-Type	Default Path
-KPI	data.value
-Grid	data.rows
-Series	data.series
-Example Response
-{
-  "data": {
-    "value": 0.74,
-    "rows": [...],
-    "series": [...]
-  }
-}
-
-The frontend extracts values using:
+Example:
 
 {
-  "queryKey": "q_oee",
-  "path": "data.value"
+  "prompt": "Show top 10 defect distribution sorted by defectCount desc for 30 days"
 }
 
-6.Swagger Documentation
+Backend will generate QueryMOMV1 objects and return a validated UIConfigV3 JSON.
 
-After starting the server, visit:
+## 8. Swagger Documentation
 
-http://127.0.0.1:8000/docs
+Visit: http://127.0.0.1:8000/docs
 
-You can test all API endpoints directly from the Swagger UI.
+Test all endpoints directly from Swagger UI.
 
-可以直接测试 API。
+## 9. MOM Data Model Reference
 
+MOM Demo – Data Model & Synthetic Data Design (v1) – https://docs.google.com/document/d/1TN7B7tRFx38kBkohVxwWzqCP3ayrDrKwK2MHfzfZ2L4/edit?tab=t.0
 
+## 10. Architecture Overview
 
-MOM Demo – Data Model & Synthetic Data Design(v1):
-https://docs.google.com/document/d/1TN7B7tRFx38kBkohVxwWzqCP3ayrDrKwK2MHfzfZ2L4/edit?tab=t.0
+User Prompt--Generate UI--UIConfigV3--QueryMOMV1--Backend Execution (Mock)--Frontend Rendering
+

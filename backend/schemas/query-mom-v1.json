@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cantier.demo/schemas/query-mom-v1.json",
+  "title": "QueryMOMV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["metric", "timeRange"],
+  "properties": {
+    "metric": {
+      "type": "string",
+      "description": "MOM demo metrics aligned with synthetic data design and frontend response contracts.",
+      "enum": [
+        "YieldRate",
+        "ScrapRate",
+        "ReworkRate",
+        "DefectDistribution",
+        "WipAgingDistribution",
+        "LotStatusDistribution"
+      ]
+    },
+
+    "timeRange": {
+      "type": "string",
+      "description": "Time window to filter by the default time dimension (date).",
+      "enum": ["today", "7d", "30d", "90d", "custom"]
+    },
+
+    "start": {
+      "type": "string",
+      "format": "date",
+      "description": "Required when timeRange=custom. Start date (YYYY-MM-DD)."
+    },
+    "end": {
+      "type": "string",
+      "format": "date",
+      "description": "Required when timeRange=custom. End date (YYYY-MM-DD)."
+    },
+
+    "dimension": {
+      "type": "string",
+      "description": "Primary group-by dimension for the metric.",
+      "enum": ["line", "defect_type", "aging_bucket", "lot_status", "job_status", "date"]
+    },
+
+    "filters": {
+      "type": "array",
+      "maxItems": 10,
+      "items": { "$ref": "#/$defs/FilterMOMV1" }
+    },
+
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 500,
+      "description": "Use when requesting top-N rows (not used for paged grids)."
+    },
+
+    "page": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Zero-based page index (use with pageSize)."
+    },
+    "pageSize": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 200,
+      "description": "Number of rows per page (use with page)."
+    },
+
+    "orderBy": {
+      "type": "array",
+      "maxItems": 3,
+      "description": "Optional sorting. Use only when user explicitly requests sorting.",
+      "items": { "$ref": "#/$defs/OrderByV1" }
+    }
+  },
+
+  "allOf": [
+    {
+      "if": {
+        "properties": { "timeRange": { "const": "custom" } },
+        "required": ["timeRange"]
+      },
+      "then": { "required": ["start", "end"] },
+      "else": {
+        "not": { "anyOf": [{ "required": ["start"] }, { "required": ["end"] }] }
+      }
+    },
+
+    { "if": { "required": ["page"] }, "then": { "required": ["pageSize"] } },
+    { "if": { "required": ["pageSize"] }, "then": { "required": ["page"] } },
+    { "not": { "required": ["limit", "page"] } },
+
+    {
+      "if": {
+        "properties": { "metric": { "const": "DefectDistribution" } },
+        "required": ["metric"]
+      },
+      "then": {
+        "properties": { "dimension": { "const": "defect_type" } },
+        "required": ["dimension"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "metric": { "const": "WipAgingDistribution" } },
+        "required": ["metric"]
+      },
+      "then": {
+        "properties": { "dimension": { "const": "aging_bucket" } },
+        "required": ["dimension"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "metric": { "const": "LotStatusDistribution" } },
+        "required": ["metric"]
+      },
+      "then": {
+        "properties": { "dimension": { "const": "lot_status" } },
+        "required": ["dimension"]
+      }
+    },
+
+    {
+      "if": {
+        "properties": {
+          "metric": {
+            "enum": ["YieldRate", "ScrapRate", "ReworkRate"]
+          }
+        },
+        "required": ["metric"]
+      },
+      "then": {
+        "description": "Rate metrics can be returned as a single value OR grouped by line/date depending on UI need.",
+        "properties": {
+          "dimension": {
+            "enum": ["line", "date"]
+          }
+        }
+      }
+    }
+  ],
+
+  "$defs": {
+    "OrderByV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "direction"],
+      "properties": {
+        "field": {
+          "type": "string",
+          "description": "Field name to sort by (backend-understood response field)."
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }
+      }
+    },
+
+    "FilterMOMV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "op", "value"],
+      "properties": {
+        "field": {
+          "type": "string",
+          "enum": ["line", "defect_type", "aging_bucket", "lot_status", "job_status", "date"]
+        },
+        "op": {
+          "type": "string",
+          "enum": ["=", "!=", "in", ">=", "<="]
+        },
+        "value": {
+          "description": "For date filters, use YYYY-MM-DD. For 'in', use an array.",
+          "type": ["string", "number", "boolean", "array"]
+        }
+      }
+    }
+  }
+}

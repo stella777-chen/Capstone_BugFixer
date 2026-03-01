@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cantier.demo/schemas/ui-config-v3.json",
+  "title": "UIConfigV3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "children", "queries"],
+  "properties": {
+    "type": { "const": "MesPage" },
+    "title": { "type": "string" },
+
+    "queries": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 12,
+      "additionalProperties": { "$ref": "https://cantier.demo/schemas/query-mom-v1.json"},
+      "description": "Map of queryKey -> QueryMOMV1. Frontend executes these queries and injects results into components via ValueRefV1/queryKey."
+    },
+
+    "children": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 6,
+      "items": { "$ref": "#/$defs/DashboardChild" }
+    }
+  },
+
+  "$defs": {
+    "DashboardChild": {
+      "oneOf": [
+        { "$ref": "#/$defs/CantierDashBoardCard" },
+        { "$ref": "#/$defs/CantierSecondaryCard" },
+        { "$ref": "#/$defs/CantierDataGrid" }
+      ]
+    },
+
+    "ValueRefV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["queryKey"],
+      "properties": {
+        "queryKey": {
+          "type": "string",
+          "description": "Key of a query defined in top-level 'queries'"
+        },
+        "path": {
+          "type": "string",
+          "description": "Simple path into the query response. Examples: 'value', 'rows', 'summary.oee'.Frontend resolver default:path='value'"
+        },
+        "fallback": {
+          "type": ["string", "number", "null"],
+          "description": "Optional fallback if value missing"
+        }
+      }
+    },
+
+    "CantierDashBoardCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "dashboardItems"],
+      "properties": {
+        "type": { "const": "CantierDashBoardCard" },
+
+        "hasIcon": {
+          "type": "boolean",
+          "default": true
+        },
+
+        "hasOption": {
+          "type": "boolean",
+          "default": true
+        },
+
+        "dashboardItems": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["label", "amount", "colorCode"],
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "KPI name displayed on the card"
+              },
+              "amount": {
+                "description": "KPI value OR a reference to query result via ValueRefV1",
+                "oneOf": [
+                  { "type": ["string", "number"] },
+                  { "$ref": "#/$defs/ValueRefV1" }
+                ]
+              },
+              "colorCode": {
+                "type": "string",
+                "enum": ["red", "blue", "green", "orange"]
+              },
+              "iconName": {
+                "type": "string",
+                "description": "Frontend maps iconName to actual React icon"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "CantierSecondaryCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "title", "subtitle", "value", "colorCode"],
+      "properties": {
+        "type": { "const": "CantierSecondaryCard" },
+
+        "title": { "type": "string", "minLength": 1 },
+        "subtitle": { "type": "string", "minLength": 0 },
+
+        "value": {
+          "description": "Card value OR a reference to query result via ValueRefV1",
+          "oneOf": [
+            { "type": ["string", "number"] },
+            { "$ref": "#/$defs/ValueRefV1" }
+          ]
+        },
+
+        "colorCode": {
+          "type": "string",
+          "enum": ["red", "blue", "green", "orange"],
+          "default": "red"
+        },
+
+        "className": { "type": "string" },
+
+        "iconName": {
+          "type": "string",
+          "description": "Frontend maps iconName to an actual ReactNode icon"
+        }
+      }
+    },
+
+    "CantierDataGrid": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "queryKey", "columns"],
+      "properties": {
+        "type": { "const": "CantierDataGrid" },
+
+        "id": { "type": "string" },
+
+        "title": { "type": "string" },
+
+        "queryKey": {
+          "type": "string",
+          "description": "Which query in top-level 'queries' supplies data for this grid"
+        },
+
+        "dataPath": {
+          "type": "string",
+          "description": "Path within that query's response that points to an array of rows. Example: 'rows'.Frontend resolver default:path='rows'"
+        },
+
+        "columns": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 30,
+          "items": { "$ref": "#/$defs/GridColumnV1" }
+        }
+      }
+    },
+
+    "GridColumnV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["header", "key"],
+      "properties": {
+        "header": { "type": "string" },
+        "key": {
+          "type": "string",
+          "description": "Field name in each row object"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["text", "number", "date", "datetime", "enum"],
+          "default": "text"
+        }
+      }
+    }
+  }
+}
