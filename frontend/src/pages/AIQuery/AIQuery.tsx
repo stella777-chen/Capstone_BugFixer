@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./AIQuery.scss";
-import { Button, Input, Textarea } from "@fluentui/react-components";
+import { Button, Textarea } from "@fluentui/react-components";
 import { sendQuery } from "../../services/aiService";
+import loader from "../../assets/CantierSpinneIcon.svg";
 
 const AIQuery: React.FC = () => {
   const [query, setQuery] = useState("");
@@ -35,35 +36,46 @@ const AIQuery: React.FC = () => {
   }
 
   return (
-    <div className="ai-page-root">
-      <div className="ai-page-card">
-        <h2 className="ai-title">AI Query</h2>
-        <p className="ai-sub">Ask Questions</p>
+    <div className="page-root">
+      <div className="page-card">
+        <h2 className="title">AI Query</h2>
+        <p className="sub">Ask Questions</p>
 
-        <div className="ai-inputs">
-          <Textarea
-            placeholder="Your question here..."
-            value={query}
-            onChange={(e) => inputChanged((e.target as HTMLTextAreaElement).value)}
-            resize="none"
-            onKeyDown={handleKeyDown}
-            className="ai-textarea"
-          />
-          <div className="ai-actions">
-            <Button appearance="primary" onClick={handleSend} disabled={isDisabled || loading} className="ai-send-btn">
+        <div className="inputs">
+          <div className="textarea-wrap">
+            <Textarea
+              placeholder="Your question here..."
+              value={query}
+              onChange={(e) => inputChanged((e.target as HTMLTextAreaElement).value)}
+              resize="none"
+              onKeyDown={handleKeyDown}
+              className="textarea"
+            />
+            {loading && (
+              <div className="input-overlay" aria-hidden="true">
+                <img src={loader} alt="Loading..." className="input-spinner"/>
+              </div>
+            )}
+          </div>
+          <div className="actions">
+            <Button appearance="primary" onClick={handleSend} disabled={isDisabled || loading} className="send-btn">
               {loading ? "Thinking..." : "Send"}
             </Button>
-            <Button onClick={() => inputChanged("")} className="ai-clear-btn">Clear</Button>
+            <Button onClick={() => inputChanged("")} className="clear-btn">Clear</Button>
           </div>
         </div>
 
-        <div className="ai-history">
-          <h3>History</h3>
-          {history.length === 0 && <div className="ai-empty">No queries yet.</div>}
+        
+      </div>
+      
+      <div className="page-card">
+        <div className="history">
+          <h3 className="history-title">History</h3>
+          {history.length === 0 && <div className="empty">No queries yet.</div>}
           {history.map((h, idx) => (
-            <div className="ai-history-item" key={idx}>
-              <div className="ai-question">Q: {h.q}</div>
-              <div className="ai-answer">A: {h.a}</div>
+            <div className="history-item" key={idx}>
+              <div className="question">Q: {h.q}</div>
+              <div className="answer">A: {h.a}</div>
             </div>
           ))}
         </div>
