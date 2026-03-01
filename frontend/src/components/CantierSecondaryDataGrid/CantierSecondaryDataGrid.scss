@@ -1,0 +1,221 @@
+.fui-DataGridCell.fui-TableCell {
+    width: max-content !important;
+    max-width: inherit !important;
+    height: 4vh;
+    line-height: normal;
+    padding: 0 0.4167vmax;
+    min-height: unset;
+}
+
+.fui-DataGridRow .fui-DataGridHeaderCell {
+    width: max-content !important;
+    max-width: inherit !important;
+    height: 4vh;
+    line-height: normal;
+    padding: 0 0.4167vmax;
+    font-weight: 600;
+
+    .fui-DataGridHeaderCell__button {
+        min-height: unset;
+    }
+}
+
+.fui-TableCell:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+.fui-DataGridHeaderCell:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+.responsive_table {
+    width: 100%;
+    overflow-x: auto;
+    font-size: 1.89vh;
+    margin-top: 2.08vh;
+    min-width: 3.13vw !important;
+    table-layout: fixed;
+    border: 1px solid #e0e0e0;
+}
+
+.actionColumn {
+    position: sticky;
+    right: 0;
+    background: white;
+    z-index: 2;
+    // box-shadow: -1px 0 0 rgba(0, 0, 0, 0.1);
+}
+
+.datagrid_container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0vmin 0.8vmax;
+}
+
+.fui-DataGridRow.fui-TableRow {
+
+    // Selected state
+    &[aria-selected="true"] {
+        background-color: #ebf3fc;
+
+        .fui-TableCell,
+        .fui-DataGridHeaderCell,
+        .actionColumn {
+            background-color: #ebf3fc;
+        }
+    }
+
+    // Active state
+    &:active {
+        background-color: #e0e0e0;
+
+        .actionColumn {
+            background-color: #e0e0e0;
+        }
+    }
+
+    // Hover state
+    &:hover {
+        background-color: #f5f5f5;
+
+        .actionColumn {
+            background-color: #f5f5f5;
+        }
+    }
+}
+
+
+
+//Pagination
+.paginationBtn {
+    font-size: 1.04vw;
+    /* 20px */
+    cursor: pointer;
+    border-radius: 6%;
+    padding: 0.1vw 0.21vw;
+    /* 2px 4px */
+    box-shadow: 0vw 0.05vw 0.05vw 0vw rgba(0, 0, 0, 0.1),
+        0vw 0vw 0vw 0.05vw rgba(70, 79, 96, 0.16),
+        0vw 0.1vw 0.26vw 0vw rgba(89, 96, 120, 0.1);
+}
+
+.paginationBtn:hover {
+    background: #ebebeb;
+}
+
+.paginationBtnDisabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.2;
+}
+
+.paginationBtn_wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.paginationBtn:active {
+    background-color: #b9b9b9;
+}
+
+.pagnationInfo {
+    margin: auto 0.52vw;
+    /* 10px */
+}
+
+.paginationContainer {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    /* width: 98%; */
+    padding: 1vh 0;
+    /* 5px */
+    font-size:var(--font-md);
+}
+
+.pagination_wrapper {
+    display: flex;
+}
+
+.paginationSelect {
+    margin: 0 0.26vw;
+    /* 5px */
+    padding: 0.26vw;
+    /* 5px */
+    border: none;
+    font-size:var(--font-md);
+}
+
+.paginationSelect:focus-visible {
+    outline: none;
+}
+
+.paginationSelect_wrapper {
+    margin: 0 0.52vw;
+    /* 10px */
+}
+
+.paginationSelect_wrapper label {
+    justify-self: center;
+}
+
+//Action Button
+.actionBtn {
+    border: none;
+    background: none;
+    max-width: 1.6667vw;
+    min-width: 1.6667vw;
+
+    span {
+        font-size: 1.0417vw;
+        height: 1.0417vw;
+        width: 1.0417vw;
+    }
+
+    svg {
+        width: 2vh;
+        height: 2vh;
+    }
+}
+
+//Check box
+.fui-DataGridSelectionCell {
+    max-width: 2vw;
+    min-width: 2vw;
+
+    .fui-Checkbox__indicator {
+        height: 1.6vh;
+        width: 1.6vh;
+        margin: 0.7407vh 0.4167vw;
+        border-width: 0.1vw;
+        border-radius: 0.2vh;
+    }
+}
+
+.fui-Avatar {
+    width: 3.5vh;
+    height: 3.5vh;
+    font-size: 1.5vh;
+}
+
+.fui-PresenceBadge {
+    svg {
+        width: 1vh;
+        height: 1vh;
+    }
+}
+.fui-Avatar__initials{
+    mask-image: none;
+}
+.fui-TableCellLayout__media{
+    svg{
+        font-size: 2vh;
+    }
+}
+.fui-TableResizeHandle{
+    margin: 0px;
+}
+.noData {
+	text-align: center;
+}

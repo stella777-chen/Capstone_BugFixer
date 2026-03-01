@@ -1,0 +1,55 @@
+:root {
+  // Font sizes
+
+  // --font-xs: 0.75rem;
+  --font-sm: 1.40vh;
+  --font-md: 1.80vh;
+  --font-header: 2.2vh;
+  --font-lg: 3vh;
+  --font-xl: 4vh;
+  --font-xxl: 5vh;
+
+  // Colors
+  --color-primary:#002856;
+  --color-accent: #F15D22;
+  --color-muted: #616161;
+  --color-light-bg: #f8f9fa;
+  --color-hover: #f3f3f3;
+
+  --space-top: 2vh;
+  --space-bottom: 2vh;
+
+  --border-radius: 0.50vh;
+  // --mt-vh: 1vh; // for tablist only 
+  // --mb-vh: 1vh; // for tablist only
+}
+
+/* Mobile (max-width: 768px) */
+@media only screen and (max-width: 768px) {
+  :root {
+    --font-sm: 0.675rem;
+    --font-md: 0.875rem;
+    --font-header: 1.2rem;
+    --font-lg: 1.6rem;
+    --font-xl: 2rem;
+    --font-xxl: 2.5rem;
+
+    --border-radius: 0.3rem;
+    // --mt-vh: -0.48rem;
+    // --mb-vh: -0.48rem;
+  }
+}
+
+/* Tablet (769px to 1024px) */
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+  :root {
+    --font-sm: 0.875rem;
+    --font-md: 1rem;
+    --font-header: 1.125rem;
+    --font-lg: 1.8rem;
+    --font-xl: 2.3rem;
+    --font-xxl: 2.8rem;
+
+    --border-radius: 0.3rem;
+  }
+}

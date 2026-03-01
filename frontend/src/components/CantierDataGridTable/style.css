@@ -1,0 +1,278 @@
+.paginationBtn {
+	font-size: 1.04vw; /* 20px */
+	cursor: pointer;
+	border-radius: 6%;
+	padding: 0.1vw 0.21vw; /* 2px 4px */
+	box-shadow: 0vw 0.05vw 0.05vw 0vw rgba(0, 0, 0, 0.1),
+		0vw 0vw 0vw 0.05vw rgba(70, 79, 96, 0.16),
+		0vw 0.1vw 0.26vw 0vw rgba(89, 96, 120, 0.1);
+}
+
+.paginationBtn:hover {
+	background: #ebebeb;
+}
+
+.paginationBtnDisabled {
+	pointer-events: none;
+	cursor: default;
+	opacity: 0.2;
+}
+
+.paginationBtn_wrapper {
+	display: flex;
+	align-items: center;
+}
+
+.paginationBtn:active {
+	background-color: #b9b9b9;
+}
+
+.pagnationInfo {
+	margin: auto 0.52vw; /* 10px */
+}
+
+.paginationContainer {
+	display: flex;
+	justify-content: end;
+	align-items: center;
+	/* width: 98%; */
+	padding: 1vh 0; /* 5px */
+	font-size: 0.729vw;
+}
+
+.pagination_wrapper {
+	display: flex;
+}
+
+.paginationSelect {
+	margin: 0 0.26vw; /* 5px */
+	padding: 0.26vw; /* 5px */
+	border: none;
+	font-size: 0.729vw;
+}
+
+.paginationSelect:focus-visible {
+	outline: none;
+}
+
+.paginationSelect_wrapper {
+	margin: 0 0.52vw; /* 10px */
+}
+
+.paginationSelect_wrapper label {
+	justify-self: center;
+}
+
+.responsive_table {
+	width: 100%;
+	overflow-x: auto;
+	font-size:var(--font-md);
+}
+
+.responsive_table td {
+	height: 4.58vh;
+	line-height: normal;
+}
+
+.datagrid_container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	padding: 0vmin 0.8vmax;
+}
+
+.formHeader_wrapper {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
+
+.formHeader_btn {
+	display: flex;
+	justify-content: flex-end;
+	width: 100%;
+}
+
+.data_table {
+	margin-top: 2.08vh;
+	min-width: 3.13vw; /* 60px */
+	width: 100%;
+	table-layout: fixed;
+}
+
+.headerHovered {
+	background-color: #e3e3e3;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.customCheckbox input[type='checkbox']:checked + div {
+	background-color: var(--color-primary);
+}
+
+.descriptionCell {
+	width: 16.66%;
+	max-width: 16.66%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.rowActions {
+	display: flex;
+	gap: 1vw; /* previously 1vh ≈ 20px */
+	margin-left: 2vw; /* previously 2vh ≈ 40px */
+}
+
+.actionBtn {
+	border: none;
+	background: none;
+	max-width: 1.6667vw;
+    min-width: 1.6667vw;
+}
+.actionBtn span{
+	font-size: 1.0417vw;
+    height: 1.0417vw;
+    width: 1.0417vw;
+}
+.actionBtn svg{
+	width: 1.0417vw;
+    height: 1.0417vw;
+}
+.noData {
+	text-align: center;
+}
+
+.checkbox_td {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.customCheckbox div {
+	height: 1.66vh;
+		width: 1.66vh;
+	margin: 0.7407vh 0.4167vw;
+	border-radius: 0.37vh;
+}
+
+.data_table th {
+	color: #000;
+	font-weight: bolder;
+	padding: 0 0.4167vmax;
+}
+.data_table th div {
+	min-height: auto !important;
+}
+.data_table td {
+	padding: 0 0.4167vmax;
+}
+/* ================= Tablet Responsive (768px and below) ================= */
+/* @media (max-width: 768px) {
+	.paginationBtn {
+		font-size: 3vw;
+		padding: 0.5vw 1vw;
+	}
+
+	.paginationContainer {
+		flex-direction: column;
+		align-items: flex-start;
+		font-size: 2.2vw;
+	}
+
+	.paginationSelect {
+		font-size: 2.2vw;
+	}
+
+	.pagnationInfo {
+		margin: 1vw 0;
+	}
+
+	.responsive_table {
+		font-size: 2vw;
+	}
+
+	.responsive_table td {
+		height: 10vh;
+	}
+
+	.actionBtn {
+		max-width: 4vw;
+		min-width: 4vw;
+	}
+	.actionBtn span,
+	.actionBtn svg {
+		font-size: 3vw;
+		width: 3vw;
+		height: 3vw;
+	}
+
+	.customCheckbox div {
+		width: 2vw;
+		height: 2vw;
+	}
+
+	.descriptionCell {
+		width: 100%;
+		max-width: 100%;
+	}
+} */
+
+/* ================= Mobile Responsive (480px and below) ================= */
+/* @media (max-width: 480px) {
+	.paginationContainer {
+		width: 100%;
+		font-size: 3vw;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.pagination_wrapper,
+	.paginationBtn_wrapper,
+	.paginationSelect_wrapper {
+		flex-direction: column;
+		width: 100%;
+		gap: 1vw;
+	}
+
+	.paginationSelect {
+		width: 100%;
+	}
+
+	.responsive_table {
+		font-size: 2.5vw;
+	}
+
+	.data_table {
+		width: 100%;
+		font-size: 2.5vw;
+	}
+
+	.data_table th {
+		font-size: 3vw;
+	} 
+
+	.actionBtn {
+		max-width: 5vw;
+		min-width: 5vw;
+	}
+
+	.actionBtn span,
+	.actionBtn svg {
+		width: 4vw;
+		height: 4vw;
+		font-size: 4vw;
+	}
+
+	.rowActions {
+		margin-left: 0;
+		gap: 2vw;
+		flex-wrap: wrap;
+	}
+
+	.customCheckbox div {
+		width: 2.5vw;
+		height: 2.5vw;
+	}
+} */

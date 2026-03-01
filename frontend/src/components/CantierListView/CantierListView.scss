@@ -1,0 +1,43 @@
+.scheduler-section {
+  margin-bottom: 3.7vh; // 2rem ≈ 32px ≈ 3.7vh on 1080px height
+
+  .scheduler-header {
+    background-color: #f3f3f3;
+    padding: 0.93vh 0.52vw; // 10px ≈ 0.93vh; left/right padding ≈ 10px ≈ 0.52vw
+    font-weight: bold;
+    font-size: 1.3vh; // ~14px
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .scheduler-event {
+    display: flex;
+    align-items: center;
+    padding: 0.74vh 0; // 8px ≈ 0.74vh
+    border-bottom: 0.09vh solid #eee; // 1px ≈ 0.09vh
+
+    .event-time {
+      width: 7.29vw; // 140px / 1920 * 100
+      padding-left: 0.52vw; // 10px
+      font-size: 1.2vh;
+    }
+
+    .event-dot {
+      width: 0.52vw; // 10px
+      margin-right: 0.52vw;
+
+      span {
+        display: inline-block;
+        width: 0.52vw;
+        height: 0.93vh;
+        border-radius: 50%;
+        background-color: #ccc;
+      }
+    }
+
+    .event-title {
+      flex: 1;
+      font-size: 1.2vh;
+    }
+  }
+}

@@ -1,0 +1,88 @@
+/* Base card style */
+.cantier_card {
+	width: calc(25% - 1.0417vw); /* 20px */
+	max-width: 100%;
+	height: fit-content;
+	margin: 0;
+	cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 1200px) {
+	.cantier_card {
+		width: calc(33.33% - 1.0417vw);
+	}
+}
+@media screen and (max-width: 900px) {
+	.cantier_card {
+		width: calc(50% - 1.0417vw);
+	}
+}
+@media screen and (max-width: 600px) {
+	.cantier_card {
+		width: calc(100% - 1.0417vw);
+	}
+}
+
+/* Card image */
+.cantier_card img {
+	height: 15.625vw; /* 300px */
+	width: auto;
+}
+
+/* Card description */
+.cantier_card_text {
+	margin: 0;
+}
+
+/* Equipment info container */
+.cantier_equipment_container {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 1.0417vw; /* 20px */
+}
+
+/* Status dot text */
+.cantier_status_text {
+	color: black;
+	font-size: 0.8333vw; /* 16px */
+	margin-left: 0.463vw; /* 8.88px */
+}
+
+/* Status dot common */
+.cantier_status_dot {
+	border-radius: 50%;
+	width: 0.5729vw; /* 11px */
+	height: 0.5729vw;
+	display: inline-block;
+}
+
+/* Status variants */
+.status_online {
+	background-color: #A8D200;
+}
+.status_offline {
+	background-color: #d60000;
+}
+.status_standby {
+	background-color: #FFBA01;
+}
+
+/* In-use status badge common */
+.cantier_inuse_status {
+	color: white;
+	padding: 0.2083vw 0.625vw; /* 4px 12px */
+	border-radius: 1.0417vw; /* 20px */
+	font-size: 0.8333vw; /* 16px */
+}
+
+/* In-use variants */
+.inuse_online {
+	background-color: #A8D200;
+}
+.inuse_repair {
+	background-color: #D60000;
+}
+.inuse_standby {
+	background-color: #FFBA01;
+}

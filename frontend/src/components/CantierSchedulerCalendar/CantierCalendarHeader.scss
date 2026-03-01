@@ -1,0 +1,121 @@
+.calender_custom_header {
+    margin-bottom: 2vh;
+    padding-left: 1.5vh;
+    padding-right: 2vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.26vh 0.8vw;
+
+    .dropdown_content.f1exfvgq {
+        min-width: 8vw !important;
+    }
+
+    .calender_custom_header_dropdown_wrapper {
+        display: flex;
+        align-self: center;
+        justify-content: end;
+    }
+
+
+    .fui-Dropdown {
+        padding-left: 2vh !important;
+        width: 8vw !important;
+    }
+
+
+    .fui-Button {
+        width: 100% !important;
+    }
+
+    .header_dropdown_wrapper {
+        padding: 0.25vh;
+        margin-left: 1vh;
+        position: relative;
+        width: 50% !important;
+    }
+
+    .dropdown_content {
+        width: 8vw !important;
+    }
+
+
+
+    .dropdown-icon-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 1vw;
+    }
+
+    .dropDownCalendarIcon {
+        font-size: 2vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+
+    .calendar-header-left button {
+        background-color: transparent;
+        border-color: transparent;
+        color: #000000;
+        text-transform: capitalize;
+
+        &:hover {
+            background-color: transparent;
+            border-color: transparent;
+            color: #000000;
+        }
+
+        &:active {
+            background-color: #f3f3f3;
+            border-color: rgb(0 0 0 / 0%);
+            color: #000000;
+            border-radius: 4.1vh !important;
+        }
+
+        &:focus {
+            box-shadow: none !important;
+        }
+    }
+
+
+
+
+
+
+    .headerCalendarIcon {
+        margin-bottom: -0.25vh;
+        margin-right: 1vh;
+        color: #000;
+        font-size: 2vh;
+    }
+
+    .dropdown-custom-trigger {
+        background: transparent;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 0.8vw;
+        font-size: 1.95vh;
+        cursor: pointer;
+    }
+
+    .dropDownCalendarIcon {
+        position: absolute;
+        left: 1vh;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 2vh;
+        pointer-events: none;
+        color: #000;
+        z-index: 2;
+    }
+
+    .custom-width-dropdown {
+        width: 15.6vw !important;
+    }
+
+}

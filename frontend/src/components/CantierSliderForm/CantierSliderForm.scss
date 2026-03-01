@@ -1,0 +1,173 @@
+.sidePanel {
+  height: 95%;
+  background-color: #fff;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  padding: 2vh 1vw;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  right: 0;
+  top: 5vh;
+  z-index: 9889;
+  gap: 1vh;
+  overflow-y: auto;
+
+  &.sm {
+    width: 30vw;
+  }
+
+  &.md {
+    width: 45vw;
+  }
+
+  &.lg {
+    width: 45vw;
+  }
+
+  &.visible {
+    visibility: visible;
+    z-index: 20;
+  }
+
+  &.hidden {
+    visibility: hidden;
+  }
+
+  .sidePanel_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sidePanel_title {
+    display: flex;
+    align-items: center;
+    gap: 0.42vw;
+    font-weight: bold;
+  }
+
+  .form-button-group {
+    position: fixed;
+    bottom: 2vh;
+    right: 1vw;
+    width: 28vw;
+    background-color: #fff;
+  }
+}
+
+.titleText {
+  font-size: var(--font-header);
+  font-weight: 600;
+}
+
+.defaultIcon {
+  font-size: var(--font-lg);
+  color: var(--color-accent);
+}
+
+.closeButtonIcon {
+  font-size: var(--font-lg);
+  cursor: pointer;
+  color: gray;
+}
+
+.SummarySecondarytitleText {
+  font-size: var(--font-md);
+  font-weight: 600;
+  margin-bottom: 1.6vh;
+}
+
+.formContent {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.SummarySecondarytitleText {
+  font-size: var(--font-md);
+  font-weight: 600;
+  margin-bottom: 1.6vh;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.42vw;
+  height: fit-content;
+  box-sizing: border-box;
+  margin-right: 0.2vw;
+}
+
+.SummarySecondarytitleText {
+  font-size: var(--font-md);
+  font-weight: 600;
+  margin-bottom: 1.6vh;
+}
+
+/* 📱 Tablet (769px - 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .sidePanel {
+    width: 24rem;
+    padding: 1.75rem 1rem;
+    top: 4rem;
+
+    &.sm {
+      width: 24rem;
+    }
+
+    &.md {
+      width: 24rem;
+    }
+
+    &.lg {
+      width: 24rem;
+    }
+
+    .sidePanel_title {
+      gap: 0.5rem;
+    }
+  }
+
+  .buttonContainer {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+}
+
+/* 📱 Mobile (≤768px) */
+@media screen and (max-width: 768px) {
+  .sidePanel {
+    width: 100%;
+    padding: 1.25rem 1rem;
+    top: 3.5rem;
+
+    &.sm {
+      width: 100%;
+    }
+
+    &.md {
+      width: 100%;
+    }
+
+    &.lg {
+      width: 100%;
+    }
+
+    .sidePanel_title {
+      gap: 0.5rem;
+    }
+  }
+
+  .buttonContainer {
+    padding: 1rem 0;
+    gap: 0.5rem;
+  }
+}
+
+/* 📏 Short height screens */
+@media screen and (max-height: 768px) {
+  .sidePanel {
+    overflow-y: auto;
+  }
+}

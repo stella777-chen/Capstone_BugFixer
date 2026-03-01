@@ -1,0 +1,78 @@
+.ai-page-root {
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+}
+.ai-page-card {
+  width: 900px;
+  background: var(--card-background, #fff);
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(24, 24, 24, 0.06) ;
+  padding: 24px;
+}
+.ai-title {
+  margin: 0 0 6px 0;
+  color: var(--color-text, #222);
+}
+.ai-sub {
+  margin: 0 0 16px 0;
+  color: var(--color-subtext, #666);
+}
+.ai-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ai-textarea {
+  min-height: 120px;
+}
+.ai-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+.ai-send-btn {
+  background: var(--color-accent, #666) !important;
+  color: #fff;
+  border: none !important;
+  cursor: pointer;
+}
+.ai-send-btn:disabled {
+  opacity: 0.5 !important;
+  background: var(--color-accent, #666) !important;
+  color: #fff !important;
+  border: none !important;
+  cursor: not-allowed;
+}
+.ai-send-btn:not(:disabled):hover {
+  box-shadow: inset 0 0 0 1px var(--color-accent, #666) !important;
+  background: transparent !important;
+  color: #222 !important;
+  border: none !important;
+  cursor: pointer;
+}
+.ai-clear-btn {
+  background: var(--color-primary, #666) !important;
+  color: #fff !important;
+  border: none !important;
+  cursor: pointer;
+}
+.ai-clear-btn:hover {
+  box-shadow: inset 0 0 0 1px var(--color-primary, #666) !important;
+  background: transparent !important;
+  color: #222 !important;
+  border: none !important;
+  cursor: pointer;
+}
+.ai-history { 
+  margin-top: 18px;
+}
+.ai-history-item {
+  padding: 12px;
+  border-radius: 6px;
+  background: var(--neutral-layer, #f9f9fb);
+  margin-bottom: 8px;
+}
+.ai-question { font-weight: 600; }
+.ai-answer { margin-top: 6px; color: #333; }
+.ai-empty { color: #888; padding: 8px 0; }

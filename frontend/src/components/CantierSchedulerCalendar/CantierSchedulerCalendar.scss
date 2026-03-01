@@ -1,0 +1,19 @@
+.Calender_wrapper {
+    position: relative;
+    padding: 1.3889vh 0.7813vw;
+
+
+
+    .fc-toolbar-chunk {
+        display: flex;
+        align-items: center;
+    }
+
+    .fc-daygrid-day-frame {
+        height: 14vh;
+        overflow: hidden;
+        min-height: auto;
+    }
+
+
+}

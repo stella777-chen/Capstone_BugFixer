@@ -1,0 +1,61 @@
+.custom-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3704vh;
+}
+
+.form-input-group {
+  label,
+  input,
+  textarea {
+    font-size: var(--font-sm); // Replace var(--font-md) with actual value (adjust if needed)
+  }
+
+  input,
+  textarea {
+    padding: 0vh 0.625vw;
+  }
+
+  label {
+    line-height: 2.5vh !important;
+  }
+
+  span.fui-Input {
+    min-height: 3.5vh;
+    height: 4.81vh;
+    border-radius: var(--border-radius);
+  }
+
+  .fui-Textarea {
+    border-radius: var(--border-radius);
+  }
+
+  textarea {
+    max-height: 24.07vh;
+    min-height: 4.81vh;
+    height: 6vh;
+    padding: 0.556vh 0.625vw;
+  }
+}
+
+.datePicker {
+  .ms-TextField-field {
+    font-size: 0.7292vw;
+    padding: 0vh 0.625vw;
+    min-height: 4vh;
+    border-radius: var(--border-radius);
+    height: 4vh;
+    background: #f5f5f5;
+    line-height: 3.5vh;
+
+    &:focus {
+      border: none;
+    }
+  }
+
+  .ms-TextField-fieldGroup,
+  .ms-TextField-fieldGroup:focus {
+    height: 100%;
+    border: none;
+  }
+}

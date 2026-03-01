@@ -1,0 +1,360 @@
+.custom-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2vh;
+}
+
+.form-input-group {
+
+    label,
+    input,
+    textarea {
+        font-size: var(--font-md);
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    input,
+    textarea {
+        padding: 0vh 0.625vw;
+    }
+
+    label {
+        line-height: normal;
+    }
+
+    span.fui-Input {
+        min-height: 3.5vh;
+        height: 4.50vh;
+        border-radius: var(--border-radius);
+    }
+
+    .fui-Textarea {
+        border-radius: var(--border-radius);
+    }
+
+    textarea {
+        max-height: 24vh;
+        min-height: 4.50vh;
+        height: 6vh;
+        padding: 0.556vh 0.625vw;
+    }
+}
+
+.datePicker {
+    .ms-TextField-field {
+        font-size: var(--font-md);
+        padding: 0vh 0.625vw;
+        min-height: 3.5vh;
+        height: 4.8vh;
+        display: flex;
+        background: #f5f5f5;
+        line-height: normal;
+        align-items: center;
+
+        &:focus {
+            border: none;
+        }
+    }
+
+    .ms-TextField-fieldGroup,
+    .ms-TextField-fieldGroup:focus {
+        height: 100%;
+        border: none;
+    }
+}
+
+// .datePicker .ms-TextField-field {
+
+// 	padding: 0vh 0.625vw;
+// 	min-height: 3.5vh;
+// 	border-radius: 0.37vh;
+// 	height: 4.81vh;
+// 	display: flex;
+// 	align-items: center;
+// 	background: #f5f5f5;
+// 	line-height: 3.5vh;
+
+// }
+
+// .datePicker .ms-TextField-field:focus {
+//     border: none;
+// }
+
+// .datePicker .ms-TextField-fieldGroup,
+// .datePicker .ms-TextField-fieldGroup:focus {
+//     height: 100%;
+//     border: none;
+// }
+.error-text {
+    color: #d13438;
+    font-size: var(--font-sm);
+    margin-top: 0.4vh;
+}
+
+.disabled-input {
+    color: #000 !important;
+    opacity: 1 !important;
+
+    * {
+        color: #000 !important;
+        opacity: 1 !important;
+        -webkit-text-fill-color: #000 !important;
+    }
+}
+
+.custom-tooltip-text {
+    font-size: var(--font-sm);
+    padding: 1.2vh;
+    line-height: normal;
+}
+
+.time-input-container {
+    display: flex;
+    gap: 1vh;
+    width: 100%;
+    align-items: flex-end;
+}
+
+.time-input-wrapper {
+    width: 50%;
+
+    label {
+        font-size: var(--font-md);
+    }
+
+    .auto-complete-combobox,
+    .auto-complete-combobox input {
+        width: 100%;
+    }
+}
+
+.time-value-input {
+    flex-basis: 60%;
+    gap: 2vh;
+}
+
+.time-unit-dropdown {
+    flex-basis: 50%;
+    min-width: auto;
+}
+
+/* ============================== */
+/* 🔽 Auto-complete Styles */
+/* ============================== */
+
+.auto-complete-wrap {
+    label {
+        font-size: var(--font-md);
+        line-height: normal !important;
+    }
+
+    input {
+        font-size: var(--font-md);
+        padding: 0vh 0.625vw;
+        height: 4vh;
+    }
+
+    span.fui-Input {
+        min-height: 3.5vh;
+    }
+}
+
+.auto-complete-box {
+    position: relative;
+    width: 100%;
+}
+
+.auto-complete-combobox {
+    min-height: 3.5vh;
+    height: 4.5vh;
+    vertical-align: top;
+    min-width: 100%;
+    border-radius: var(--border-radius);
+
+    svg {
+        height: 2.5vh !important;
+        width: 1vw !important;
+    }
+}
+
+.fui-FluentProvider {
+    .fui-Option {
+        font-size: var(--font-md);
+        padding: 0.5556vh 0.4167vw;
+        line-height: normal;
+
+        svg {
+            font-size: var(--font-md);
+        }
+    }
+}
+
+.fui-Listbox {
+    max-width: 100vw !important;
+    max-height: 37.9937vh !important;
+    min-width: 8.3333vw;
+    padding: 0.3704vh 0.2083vw;
+}
+
+/* ============================== */
+/* 📱 Tablet styles (≤1024px) */
+/* ============================== */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .custom-input-container {
+        gap: 0.2rem;
+    }
+
+    .form-input-group {
+
+        label,
+        input,
+        textarea {
+            line-height: normal !important;
+        }
+
+        input,
+        textarea {
+            padding: 0.5rem 1rem;
+        }
+
+        span.fui-Input {
+            min-height: 2.5rem;
+            height: 3rem;
+        }
+
+        textarea {
+            max-height: 15rem;
+            min-height: 3rem;
+            height: 4rem;
+        }
+    }
+
+    // .datePicker .ms-TextField-field {
+    //     font-size: 0.875rem;
+    //     padding: 0.5rem 1rem;
+    //     height: 2.8rem;
+    //     line-height: normal;
+    // }
+
+    .custom-tooltip-text {
+        padding: 0.75rem;
+    }
+
+    .auto-complete-wrap {
+        input {
+            height: 3rem;
+            padding: 0.5rem 1rem;
+        }
+
+        span.fui-Input {
+            min-height: 2.75rem;
+        }
+    }
+
+    .auto-complete-combobox {
+        height: 3rem;
+
+        svg {
+            height: 1.5rem !important;
+            width: 1.25rem !important;
+        }
+    }
+
+    .fui-FluentProvider .fui-Option {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .fui-Listbox {
+        max-height: 25rem !important;
+        min-width: 10rem;
+        padding: 0.5rem;
+    }
+}
+
+/* ============================== */
+/* 📱 Mobile styles (≤768px) */
+/* ============================== */
+@media screen and (max-width: 768px) {
+    .custom-input-container {
+        gap: 0.2rem;
+    }
+
+    .form-input-group {
+
+        label,
+        input,
+        textarea {
+            line-height: normal !important;
+        }
+
+        input,
+        textarea {
+            padding: 0.5rem 0.75rem;
+        }
+
+        span.fui-Input {
+            min-height: 2.2rem;
+            height: 2.75rem;
+        }
+
+        textarea {
+            max-height: 12rem;
+            min-height: 2.8rem;
+            height: 3.5rem;
+        }
+    }
+
+    // .datePicker .ms-TextField-field {
+    //     font-size: 0.85rem;
+    //     padding: 0.5rem;
+    //     height: 2.5rem;
+    //     line-height: normal;
+    // }
+
+    .custom-tooltip-text {
+        padding: 0.6rem;
+    }
+
+    .time-input-container {
+        flex-direction: row;
+        gap: 0.75rem;
+    }
+
+    .time-value-input,
+    .time-unit-dropdown {
+        flex-basis: 100%;
+    }
+
+    .auto-complete-wrap {
+        input {
+            height: 2.8rem;
+            padding: 0.5rem 0.75rem;
+        }
+
+        span.fui-Input {
+            min-height: 2.5rem;
+        }
+    }
+
+    .auto-complete-combobox {
+        height: 2.75rem;
+
+        svg {
+            height: 1.3rem !important;
+            width: 1rem !important;
+        }
+    }
+
+    .fui-FluentProvider .fui-Option {
+        padding: 0.5rem;
+    }
+
+    .fui-Listbox {
+        max-height: 20rem !important;
+        min-width: 8rem;
+        padding: 0.5rem;
+    }
+}

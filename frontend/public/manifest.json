@@ -1,0 +1,464 @@
+{
+  "remoteName": "WIP",
+  "remoteEntry": "/WIP/remoteEntry.js",
+  "routes": [
+    {
+      "icon": "Settings20Regular",
+      "label": "WIP",
+      "path": "wip",
+      "page": "WIP/WIPDashboard",
+      "selectedIcon": "Settings20Regular",
+      "hideSidebar": false,
+      "children": [
+        {
+          "label": "WIP",
+          "path": "wip-mod",
+          "page": "WIP/WipMod",
+          "icon": "Settings20Regular",
+          "renderChild": true,
+          "applicationName": "WIP",
+          "description": "Configure WIP settings, equipment and production parameters",
+          "children": [
+            {
+              "label": "WIP Setup",
+              "applicationName": "WIP Setup",
+              "path": "wip-setup",
+              "page": "WIP/WipSetup",
+              "renderChild": true,
+              "icon": "Settings20Regular",
+              "description": "Configure WIP settings, equipment and production parameters",
+              "children": [
+                {
+                  "label": "WIP Dashboard",
+                  "path": "dashboard",
+                  "page": "WIP/WipDashboard",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "WIP Dashboard",
+                  "actions": []
+                },
+                {
+                  "label": "Equipment Setup",
+                  "path": "equipment-setup",
+                  "page": "WIP/EquipmentSetup",
+                  "icon": "WrenchScrewdriver20Regular",
+                  "renderChild": false,
+                  "moduleName": "Equipment Setup",
+                  "actions": [
+                    "Attach",
+                    "Replace",
+                    "Remove"
+                  ]
+                },
+                {
+                  "label": "Machine Material Setup",
+                  "path": "machineMaterialSetup",
+                  "page": "WIP/MachineMaterialSetup",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Machine Material Setup",
+                  "actions": []
+                },
+                {
+                  "label": "Defects",
+                  "path": "defects",
+                  "page": "WIP/Defect",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Defects",
+                  "actions": [
+                    "Add New",
+                    "Delete",
+                    "Edit",
+                    "View"
+                  ]
+                },
+                {
+                  "label": "Defect Groups",
+                  "path": "defect-groups",
+                  "page": "WIP/DefectGroup",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Defect Groups",
+                  "actions": [
+                    "Add New",
+                    "Delete",
+                    "Edit",
+                    "View"
+                  ]
+                },
+                {
+                  "label": "Lot Adjustment Reasons",
+                  "path": "lot-adjustment-reasons",
+                  "page": "WIP/LotAdjustmentReason",
+                  "icon": "WrenchScrewdriver20Regular",
+                  "renderChild": false,
+                  "moduleName": "Lot Adjustment Reasons",
+                  "actions": [
+                    "Add New",
+                    "Delete",
+                    "Edit",
+                    "View"
+                  ]
+                },
+                {
+                  "label": "Rework Reasons",
+                  "path": "reworkReasons",
+                  "page": "WIP/ReworkReason",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Rework Reasons",
+                  "actions": [
+                    "Add New",
+                    "Delete",
+                    "Edit"
+                  ]
+                },
+                {
+                  "label": "Change Order Reasons",
+                  "path": "changeOrderReasons",
+                  "page": "WIP/ChangeOrderReason",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Change Order Reasons",
+                  "actions": [
+                    "Add New",
+                    "Delete",
+                    "Edit"
+                  ]
+                },
+                {
+                  "label": "Operators",
+                  "path": "operators",
+                  "page": "WIP/Operator",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Operators",
+                  "actions": [
+                    "Add New",
+                    "Delete",
+                    "Edit",
+                    "View"
+                  ]
+                },
+                {
+                  "label": "Master Sampling Setup",
+                  "path": "MasterSamplingSetup",
+                  "page": "WIP/MasterSampling",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Master Sampling Setup",
+                  "actions": [
+                    "Add New",
+                    "Delete",
+                    "Edit",
+                    "View",
+                    "Archive"
+                  ]
+                },
+                {
+                  "label": "Poka Yoke Master",
+                  "path": "PokayokeMaster",
+                  "page": "WIP/PokayokeMaster",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Poka Yoke Master",
+                  "actions": []
+                },
+                {
+                  "label": "4M Change Configuration",
+                  "path": "4mchangeconfiguration",
+                  "page": "WIP/4MChange",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "actions": []
+                },
+                {
+                  "label": "Changeover Steps",
+                  "path": "Changeover-Steps",
+                  "page": "WIP/ChangeoverSteps",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Changeover Steps",
+                  "actions": []
+                },
+                {
+                  "label": "Changeover Setup",
+                  "path": "Changeover-Setup",
+                  "page": "WIP/ChangeoverSetup",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Changeover Setup"
+                },
+                {
+                  "label": "SOP Sequence",
+                  "path": "SopSequence",
+                  "page": "WIP/SopSequence",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "SopSequence",
+                  "actions": []
+                },
+                {
+                  "label": "Tool Change Reason",
+                  "moduleName": "Tool Change Reason",
+                  "path": "toolchangereason",
+                  "page": "MasterData/ToolChangeReason",
+                  "renderChild": false,
+                  "actions": [
+                    "Add New",
+                    "Edit",
+                    "Delete"
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "WIP Transaction",
+              "applicationName": "WIP Transaction",
+              "path": "wip-transactions",
+              "page": "WIP/WipTransactions",
+              "renderChild": true,
+              "icon": "Settings20Regular",
+              "description": "Manage all WIP transactions and production activities",
+              "children": [
+                {
+                  "label": "Job Orders",
+                  "path": "jobOrders",
+                  "page": "WIP/JobOrder",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Job Orders",
+                  "actions": [
+                    "Add New",
+                    "Edit",
+                    "Delete",
+                    "Create Lot",
+                    "Cancel",
+                    "Hold JO",
+                    "Release JO",
+                    "JO Sort Closed",
+                    "View"
+                  ]
+                },
+                {
+                  "label": "Lot List",
+                  "path": "Lot-List",
+                  "page": "WIP/LotList",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Lot List",
+                  "actions": []
+                },
+                {
+                  "label": "Move Lot",
+                  "path": "moveLot",
+                  "page": "WIP/MoveLot",
+                  "icon": "WrenchScrewdriver20Regular",
+                  "renderChild": false,
+                  "moduleName": "Move Lot",
+                  "actions": [
+                    "Add New",
+                    "Edit",
+                    "Delete",
+                    "Move Next"
+                  ]
+                },
+                {
+                  "label": "Poka Yoke",
+                  "path": "PokaYoke",
+                  "page": "WIP/PokaYoke",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Poka Yoke",
+                  "actions": [
+                    "Add New",
+                    "Delete",
+                    "Edit",
+                    "View"
+                  ]
+                },
+                {
+                  "label": "Manpower Assignment",
+                  "path": "manpowerAssignment",
+                  "page": "WIP/ManpowerAssignment",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Manpower Assignment",
+                  "actions": []
+                },
+                {
+                  "label": "4M Change Inbox",
+                  "path": "4mchangeinbox",
+                  "page": "WIP/4MChangeInbox",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "actions": []
+                },
+                {
+                  "label": "Sampling Inspection",
+                  "path": "Sampling-Inspection",
+                  "page": "WIP/SamplingInspection",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Sampling Inspection",
+                  "actions": []
+                },
+                {
+                  "label": "Final Inspection",
+                  "path": "Final-Inspection",
+                  "page": "WIP/FinalInspection",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Final Inspection",
+                  "actions": []
+                },
+                {
+                  "label": "100% Inspection",
+                  "path": "CompleteInspection",
+                  "page": "WIP/CompleteInspection",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "100% Inspection",
+                  "actions": []
+                },
+                {
+                  "label": "Changeover Setup",
+                  "path": "Changeover-Setup",
+                  "page": "WIP/ChangeoverSetup",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Changeover Setup",
+                  "actions": []
+                },
+                {
+                  "label": "Changeover Steps",
+                  "path": "Changeover-Steps",
+                  "page": "WIP/ChangeoverSteps",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Changeover Steps",
+                  "actions": []
+                },
+                {
+                  "label": "First Pass Inspection",
+                  "path": "First-Pass-Inspection",
+                  "page": "WIP/FirstPassInspection",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "First Pass Inspection",
+                  "actions": []
+                },
+                {
+                  "label": "Changeover Management",
+                  "path": "Change-Over-Transaction",
+                  "page": "WIP/ChangeOverTransaction",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Change Over Transaction",
+                  "actions": []
+                },
+                {
+                  "label": "Tool Inventory",
+                  "path": "Tool-Inventory",
+                  "page": "WIP/ToolInventory",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Tool Inventory",
+                  "actions": [
+                    "Add New",
+                    "Edit",
+                    "Delete",
+                    "View"
+                  ]
+                },
+                {
+                  "label": "Tool Inspection",
+                  "path": "Tool-Inspection",
+                  "page": "WIP/ToolInspection",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Tool Inspection",
+                  "actions": [
+                    "Add New",
+                    "Edit",
+                    "Delete",
+                    "View",
+                    "Submit"
+                  ]
+                },
+                {
+                  "label": "Tool Pre-Setting",
+                  "path": "Pre-Setting",
+                  "page": "WIP/PreSetting",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Pre-Setting"
+                },
+                {
+                  "label": "Tool Assignment",
+                  "path": "Tool-Assignment",
+                  "page": "WIP/ToolAssignment",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Tool Assignment"
+                },
+                {
+                  "label": "Tool Reground",
+                  "path": "Tool-Reground",
+                  "page": "WIP/ToolReground",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Tool Reground",
+                  "actions": [
+                    "Add New",
+                    "Edit",
+                    "Delete",
+                    "View",
+                    "Submit"
+                  ]
+                },
+                {
+                  "label": "Rework",
+                  "path": "Rework",
+                  "page": "WIP/Rework",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "Rework",
+                  "actions": [
+                    "Add New",
+                    "Edit",
+                    "Delete",
+                    "Submit"
+                  ]
+                },
+                {
+                  "label": "Production Planning",
+                  "path": "ProductionPlanning",
+                  "page": "WIP/ProductionPlanning",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "ProductionPlanning"
+                },
+                {
+                  "label": "WIP Trace",
+                  "path": "BIWipTrace",
+                  "page": "WIP/BIWipTrace",
+                  "icon": "BoxSearchRegular",
+                  "renderChild": false,
+                  "moduleName": "BIWipTrace",
+                  "actions": [
+                    "Add New",
+                    "Edit",
+                    "Delete",
+                    "Submit"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

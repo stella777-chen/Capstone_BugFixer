@@ -1,0 +1,80 @@
+*::-webkit-scrollbar {
+    display: none;
+}
+
+
+
+.parent {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* 3 equal columns */
+    gap: 20px;
+    padding: 20px;
+}
+
+.div1 {
+    grid-column: span 1;
+    /* Only take 1 column */
+}
+
+.div2 {
+    grid-column: span 1;
+    /* Should not span 3 columns */
+}
+
+.div4 {
+    grid-column: span 3 / span 3;
+    grid-row: span 3 / span 3;
+    grid-column-start: 1;
+    grid-row-start: 3;
+
+}
+
+.div5 {
+    grid-row: span 3 / span 3;
+
+    grid-column-start: 4;
+    grid-row-start: 3;
+}
+
+.div3 {
+    grid-row: span 2/ span 2;
+    grid-column-start: 5;
+    grid-row-start: 1;
+}
+
+.div6 {
+    grid-row: span 3 / span 3;
+    grid-column-start: 5;
+    grid-row-start: 3;
+    overflow: hidden;
+    /* Prevents content overflow */
+}
+
+.custom-card {
+    width: 100%;
+    /* Ensures cards take full column space */
+    min-width: 300px;
+    /* Prevents cards from shrinking too much */
+    max-width: 400px;
+    /* Prevents cards from getting too large */
+    height: 100%;
+    /* Makes all cards equal height */
+    min-height: 300px;
+    /* Ensures uniform height */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    /* Optional: Adds a light shadow */
+    border-radius: 10px;
+    /* Optional: Rounded corners */
+    background-color: white;
+    /* Optional: Ensures background is visible */
+    padding: 15px;
+}
+
+.custom-card:nth-child(2),
+.custom-card:nth-child(4) {
+    max-width: 150vh;
+    /* Slightly larger width */
+}

@@ -1,0 +1,438 @@
+.cantier-form-root {
+    padding: 1.3889vh 0.7813vw;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 0.11%;
+}
+
+.cantier-form-group {
+    width: 100%;
+    border-radius: 8px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.cantier-input-grid {
+    display: grid;
+    gap: 2vh 1vw;
+    margin: 1vh 0;
+}
+
+.custom-divider {
+	margin: 1.5vh 0;
+	padding: 1vh;
+}
+
+/* .custom-divider1{                   
+	margin-top: 1vh;
+}            */
+
+.dialog-title {
+	margin-bottom: 2vh;
+	padding-top: 0.05208vw;
+}
+
+.verticalform-Alignment {
+    padding: 2vh !important;
+}
+
+.columns-1 {
+    grid-template-columns: repeat(1, 1fr);
+}
+
+.columns-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.columns-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.columns-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.columns-5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.columns-6 {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+/* .form-input-group {
+	display: flex;
+	flex-direction: column;
+	max-width: 100%;
+} */
+
+.checkbox-group {
+	/* padding-top: 1.8519vh; */
+	display: grid;
+	align-items: center;
+}
+
+.checkbox-group div {
+	margin: 0.7407vh 0.4167vw 0.7407vh 0;
+	height: 2vh;
+	width: 2vh;
+	font-size: 1.625vw;
+	border-radius: 0.37vh;
+}
+
+.checkbox-group label {
+    padding: 0.7407vh 0.4167vw;
+}
+
+.logo-uploader {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    /* gap: 2vh 1vw; */
+    margin-top: 1vh;
+    margin-top: 2vh;
+}
+
+.form-button-group {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	margin-top: 2vh;
+	/* position: sticky;
+	bottom: 0;
+	background-color: white; */
+	/* padding: 10px 0; */
+	margin-right: 0.25vw;
+}
+
+/* for span tag in error text  */
+.error-text {
+	color: #d13438;
+	font-size: 0.833vw;
+}
+
+/* for dot in account in master */
+.status-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 0.42vw;
+	/* was 8px */
+}
+
+.status-dot {
+	width: 0.52vw;
+	/* was 10px */
+	height: 0.52vw;
+	/* was 10px */
+	border-radius: 50%;
+}
+
+.custom-spinner {
+	position: absolute;
+	right: 50px;
+	/* was 50px */
+	/* 2.6vw; */
+}
+
+.custom-spinner-position {
+	position: absolute;
+	right: 50px;
+	/* was 50px &  2.6vw;   */
+	top: 200px;
+	/* was 200px & 18.66vh */
+}
+
+/* for flex container */
+.flex-end-container {
+	display: flex;
+	justify-content: flex-end;
+	gap: 1vh;
+}
+
+/* for tabs  */
+.custom-tab {
+	padding: 10px;
+	/* background-color: vilo; */
+}
+
+
+/* .form-input-group label,
+.form-input-group input,
+.form-input-group textarea {
+	font-size:var(--font-md);
+}
+
+.form-input-group input,
+.form-input-group textarea {
+    padding: 0vh 0.625vw;
+}
+
+.form-input-group label {
+    line-height: 2.5vh !important;
+    color: #000000 !important
+}
+
+.form-input-group span.fui-Input {
+    min-height: 3.5vh;
+    height: 4.81vh;
+    border-radius: var(--border-radius);
+}
+
+.form-input-group .fui-Textarea {
+    border-radius: var(--border-radius);
+}
+
+.form-input-group textarea {
+	max-height: 24.07vh;
+	min-height: 4.81vh;
+	height: 6vh;
+	padding: 0.556vh 0.625vw;
+} */
+
+
+ 
+.dropdown_cantier {
+    line-height: 2.5vh;
+    min-height: 3.5vh !important;
+    height: 4vh;
+    font-size: 0.7292vw;
+    border-radius: var(--border-radius);
+}
+
+.dropdown_cantier button {
+    font-size: 0.7292vw;
+    padding: 0vh 0.625vw;
+    line-height: inherit;
+}
+
+.dropdown_cantier svg {
+    height: 2.5vh !important;
+    width: 1vw !important;
+}
+
+.custom-scrollbar {
+    scrollbar-width: thin;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+.custom-dashboard-box {
+	display: flex;
+	justify-content: end;
+}
+
+
+/* .custom-style-box-container {
+	width: 10vw;
+} */
+
+
+/* .custom-dashboard-label-value {
+	color: #000000 !important;
+	font-size: 1.6vh !important;
+	white-space: nowrap !important;
+	display: block !important;
+} */
+
+/* .dashboard-number-value {
+	color: #000000;
+	font-size: 3.5vh;
+	font-weight: 700;
+	display: block;
+} */
+
+.lotListNotStarted {
+    background-color: var(--color-accent);
+}
+
+.lotListStarted {
+    background-color: #ffba01;
+}
+
+.lotList {
+    background-color: #7fbc00;
+}
+
+.lot {
+    background-color: #dd0000;
+}
+
+.product-spec-dashboard-icon {
+    min-width: 3.5vw;
+    min-height: 3.5vw;
+    border-radius: 0.35vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-spec-dashboard-icon svg {
+    width: 1.3vw;
+    height: 1.3vw;
+}
+
+/* .custom-style-box-container { */
+/* display: flex;
+	gap: 0.5vw; */
+/* flex-direction: column; */
+/* align-items: flex-end;
+  text-align: right; */
+/* } */
+
+.customized-icon-button {
+    display: flex;
+    width: 11.46vw !important;
+    height: 4.63vh !important;
+    background-color: #4376AF !important;
+    border-radius: 6px !important;
+    box-shadow: inset 0 1px 0 0 rgba(75, 133, 250, 1), 0 0 1px 0 rgba(0, 0, 0, 0.14), 0 0 0 1px #2264E5, 0 2px 5px 0 rgba(34, 100, 229, 0.12) !important;
+}
+
+.cantier-text-button-label {
+    text-transform: none;
+    color: #FFFFFF;
+    font-weight: 500 !important;
+    letter-spacing: 0.02px;
+    align-self: center;
+    height: auto;
+    font: roboto;
+    font-size: 30px;
+    position: absolute;
+    padding: 6px 12px;
+    gap: 40px;
+}
+
+/*****************************************************************************************/
+/*Css for ProductSpec data Grid Status*/
+/* Status Chip Styles */
+.status-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.6vh;
+}
+
+.status-indicator {
+    width: 0.8vh;
+    height: 0.8vh;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-label {
+    font-size: 1.4vh;
+    color: #333;
+}
+
+/* Status Colors */
+.status-0 {
+    background-color: #3C8646;
+    /* Active - Green */
+}
+
+.status-1 {
+    background-color: #FF8F00;
+    /* Archived - Orange */
+}
+
+.status-2 {
+    background-color: #A61A31;
+    /* Inactive - Red */
+}
+
+/* Fallback for unknown status */
+.status-indicator:not(.status-0):not(.status-1):not(.status-2) {
+    background-color: #ccc;
+}
+
+.Cantier-ProductSpec-Route-Form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1vh;
+}
+
+.file-container {
+	justify-content: center;
+}
+
+
+.file-chip {
+    display: flex;
+    align-items: center;
+    gap: 1vh;
+    max-width: 100%;
+}
+
+.file-chip span {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	font-size: var(--font-md);
+}
+
+.file-chip button {
+	font-size: 1.85vh;
+}
+
+.time-input-row {
+	display: flex;
+	align-items: center;
+	gap: 1vh;
+	width: 100%;
+}
+
+
+/*********************************************************************************/
+.card_txt_wrapper {
+    justify-content: space-around;
+    line-height: 2vh;
+}
+.switch_poisition{
+    margin-top: 1vh;
+}
+
+/* .MesDashboardContainer {
+
+	display: flex;
+
+	justify-content: flex-end;
+
+	align-items: center;
+
+	position: absolute;
+
+	top: 9.2vh;
+
+	right: 0;
+
+	padding: 3vh 1vw;
+
+} */
+
+@media (max-width: 1250px) {
+
+	/* .MesDashboardContainer {
+
+		position: static;
+
+	} */
+
+}

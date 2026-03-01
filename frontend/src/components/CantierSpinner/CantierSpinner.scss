@@ -1,0 +1,40 @@
+.spin_overlay {
+  width: 100%;
+  min-height:10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.7); 
+  //z-index: 9999;
+}
+ 
+.spinner {
+  height:8vh;
+}
+.spin_overlay_slider {
+  width: 100%;
+  height:100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.7); 
+  //z-index: 9999;
+}
+.spin_overlay_form {
+  width: 100%;
+  height:50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.7); 
+  //z-index: 9999;
+}
+.spin_overlay_chart {
+  width: 100%;
+  height:25vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.7); 
+  //z-index: 9999;
+}

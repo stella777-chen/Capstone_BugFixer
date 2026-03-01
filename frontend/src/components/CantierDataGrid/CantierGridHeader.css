@@ -1,0 +1,96 @@
+.gridHeader {
+	display: flex;
+	flex-direction: column;
+	gap: 1.6vh;
+	/* margin-top: 1.1vw; */
+}
+
+.gridHeader_title {
+	margin: 0;
+	font-size: var(--font-md);
+	font-weight: bold;
+	font-family: sans-serif;
+}
+
+.gridHeader_actions {
+	display: flex;
+	align-items: center;
+	gap: 0.42vw;
+}
+
+
+.gridHeader_actions_reverse {
+	display: flex;
+	flex-direction: row-reverse;
+	align-items: center;
+	gap: 0.42vw;
+}
+
+.gridHeader_btnWrapper {
+	display: flex;
+	gap: 0.5vw;
+
+	div {
+		display: flex;
+		gap: 0.5vw;
+	}
+}
+
+.gridHeader_btnWrapper button {
+	margin-left: 0;
+}
+
+.gridHeader_searchWrapper {
+	display: flex;
+	align-items: center;
+	gap: 0.52vw;
+}
+
+.gridHeader_searchWrapper .fui-Input {
+	min-height: 4vh;
+}
+
+.gridHeader_searchWrapper svg {
+	font-size: var(--font-md);
+	width: 2vh;
+	height: 2vh;
+	color: #242424;
+}
+
+.gridHeader_searchWrapper input {
+	font-size: var(--font-md);
+	line-height: 3vh !important;
+}
+
+.gridheader_Wrapperbtn {
+	width: 10vh !important;
+	max-width: 5vh !important;
+	min-width: none !important;
+	color: #F15D22 !important;
+	border: 1px solid #F15D22 !important;
+
+}
+
+.gridheader_Wrapperbtn:hover {
+	color: #F15D22 !important;
+	border-color: #F15D22 !important;
+	background-color: transparent !important;
+}
+
+.gridHeader_filter {
+	display: flex;
+	align-items: center;
+	gap: 0.26vw;
+	cursor: pointer;
+}
+
+.gridHeader_filterText {
+	font-size: var(--font-md);
+	color: #454545;
+}
+
+.gridHeader_searchWrapper .fui-SearchBox {
+	border-radius: 0.8vh;
+}
+
+@media (max-width: 768px) {}

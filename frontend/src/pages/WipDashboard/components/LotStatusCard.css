@@ -1,0 +1,21 @@
+/* LotStatusCard.module.css */
+.singleCard {
+     width: 100%; 
+    height: 100%;
+    padding: 2.5vh;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    flex: 1 1 20%;
+  }
+  
+  .errorContainer {
+    color: #a4262c;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .loadingContainer {
+    text-align: center;
+    padding: 20px;
+  }
+  

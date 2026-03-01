@@ -1,0 +1,95 @@
+.work-order-card {
+  // width: 18.75vw; // 360px / 1920
+  padding: 1vh 0.5vw; // 16px / 1920
+  display: flex;
+  flex-direction: column;
+  gap: 0.625vw; // 12px
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+
+    .ms-Text {
+      font-size: 1.3vh; // approx 14px
+    }
+  }
+
+  .description {
+    color: #333;
+    font-size: 1.3vh; // 14px
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.417vw;
+  }
+
+  .avatar-panal-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.417vw;
+    margin-top: 0.3vh;
+
+    span {
+      font-size: 1.5vh;
+    }
+
+    .avatar-panal-info {
+      display: flex;
+      flex-direction: column;
+
+      .ms-Caption1Strong {
+        font-size: 1.2vh; // ~13px
+      }
+
+      .ms-Caption1 {
+        font-size: 1.1vh; // ~12px
+      }
+    }
+  }
+
+  .time-equipment {
+    display: flex;
+    flex-direction: column;
+    gap: 0.313vw;
+    line-height: 1vh;
+
+    .time {
+      display: flex;
+      gap: 0.313vw;
+      color: #555;
+      font-size: 1.3vh;
+      flex-direction: column;
+    }
+
+    .time_part {
+      font-weight: 600;
+    }
+
+    .equipment {
+      color: #777;
+      font-size: 1.1vh; // ~12px
+    }
+  }
+
+  label {
+    font-size: 1.5vh;
+  }
+
+  .card-details-part {
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1vh 8vw;
+  }
+ .cardPrimaryBtn{
+  background-color: #ebf3fc;
+  color: #2b75b6;
+  font-weight: 600;
+  padding: 0.2vh 1.2vh;
+  font-size: 1.2vh;
+  border-radius: 1vh;
+ } 
+}

@@ -1,0 +1,176 @@
+.page_layout {
+  padding: 1.5vh 0.75vw;
+  line-height: normal;
+  margin-top: 4.2vh;
+}
+
+.button-container {
+  gap: 0.5vw;
+}
+
+.message_no_data {
+  background-color: #f3f3f3;
+  padding: 0.93vh 0.8vw;
+  font-weight: bold;
+  line-height: 4vh;
+  font-size: var(--font-sm);
+  display: flex;
+  justify-content: space-around;
+}
+
+.display_value {
+  display: flex;
+  align-items: center;
+  min-height: 3.5vh;
+  height: 4.5vh;
+  font-size: var(--font-md);
+}
+
+.form-button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.42vw;
+  height: fit-content;
+  box-sizing: border-box;
+
+  button {
+    margin: 0.26vw 0 !important;
+  }
+}
+
+.nearByAlignmentBtn {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.btn_filter {
+  display: flex;
+  align-items: flex-end;
+}
+
+.headerTitleText {
+  font-size: var(--font-md) !important;
+  font-weight: 600 !important;
+  margin-bottom: 1vh !important;
+}
+
+.divider_line {
+  margin: var(--space-top) 0 var(--space-bottom) 0;
+}
+
+.cantier-breadcrumbs-card {
+  font-size: var(--font-sm);
+}
+
+.cantier-breadcrumbs-card .fui-Card {
+  margin: 0 !important;
+}
+
+.title .fui-Text {
+  font-size: var(--font-md);
+}
+
+.truncated-text p {
+  // display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+.spaceTop {
+  margin-top: var(--space-top);
+}
+
+.spaceBottom {
+  margin-bottom: var(--space-bottom);
+}
+
+/* 💻 Tablet (769px - 1024px) */
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+  .page_layout {
+    padding: 1.25rem;
+    margin-top: 3rem;
+  }
+
+  .button-container {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .form-button-group {
+    gap: 0.75rem;
+  }
+
+  .truncated-text p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+  }
+
+  .cantier-breadcrumbs-card .f1whfe0l.fvc8slw {
+    width: 1.71rem;
+    height: 1.42rem;
+  }
+}
+
+/* 📱 Mobile (≤768px) */
+@media only screen and (max-width: 768px) {
+  .page_layout {
+    padding: 1rem;
+    margin-top: 2rem;
+  }
+
+  .button-container {
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .form-button-group {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .cantier-breadcrumbs-card .f1whfe0l.fvc8slw {
+    width: 1.28rem;
+    height: 1.89rem;
+  }
+
+  .truncated-text p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+  }
+}
+
+.mt-1vh {
+  margin-top: 1vh;
+}
+
+.mb-1vh {
+  margin-bottom: 1vh;
+}
+
+.mb-2vh {
+  margin-bottom: 2vh;
+}
+
+.mt-2vh {
+  margin-top: 2vh;
+}
+
+.p-0 {
+  padding: 0 !important;
+}

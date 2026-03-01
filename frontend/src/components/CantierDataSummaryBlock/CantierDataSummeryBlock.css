@@ -1,0 +1,198 @@
+.cantier-data-summary-container {
+    background-color: #ffffff;
+    border: 0.052vw solid #e1e1e1;
+    border-radius: 0.208vw;
+    position: relative;
+    max-width: 100%;
+    padding: 1.3889vh 0.7813vw;
+    box-shadow: 0vw 0.208vh 0.417vw rgba(0, 0, 0, 0.15);
+    margin: 1vh 0;
+}
+
+.cantier-data-summary-container-no-border {
+    background-color: #ffffff;
+    border-radius: 0.208vw;
+    position: relative;
+    max-width: 100%;
+    padding: 1.3889vh 0.7813vw;
+    box-shadow: 0vw 0.208vh 0.317vw rgba(0, 0, 0, 0.20);
+    margin: 1vh 0;
+}
+
+.cantier-data-summary-container-no-border-fixed-height {
+    background-color: #ffffff;
+    border-radius: 0.208vw;
+    position: relative;
+    max-width: 100%;
+    padding: 1.3889vh 0.7813vw;
+    box-shadow: 0vw 0.208vh 0.317vw rgba(0, 0, 0, 0.20);
+    margin: 1vh 0;
+    height: 35vh !important;
+}
+    
+.cantier-data-summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.85vh;
+}
+
+.cantier-data-summary-title {
+    font-size: var(--font-md);
+    font-weight: bold;
+    font-family: sans-serif;
+    margin: 2;
+}
+
+.cantier-data-summary-subtitle {
+    font-size: var(--font-md);
+    font-weight: bold;
+    font-family: sans-serif;
+    margin: 0;
+    padding-top: 2vh !important
+}
+
+.cantier-data-summary-expand-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5vh;
+    border-radius: 0.208vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent);
+    transition: all 0.2s ease;
+    width: 3vh;
+    height: 3vh;
+}
+
+.cantier-data-summary-expand-btn:hover {
+    background-color: #f3f2f1;
+    color: var(--color-accent);
+}
+
+.cantier-data-summary-expand-btn:focus {
+    outline: 0.2vh solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.cantier-data-summary-expand-btn svg {
+    width: 2vh;
+    height: 2vh;
+}
+
+.cantier-data-summary-input-section {
+    margin-top: 12px;
+    margin-bottom: 16px;
+}
+
+.cantier-data-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--items-per-row), 1fr);
+    gap: 2vh .25vw;
+    align-items: start;
+    margin-top: 0;
+    padding-top: 2vh !important;
+    padding-bottom: 2vh !important;
+}
+
+.cantier-data-summary-container-sliderform {
+    background-color: #ffffff;
+    border-radius: 0.208vw;
+    position: relative;
+    max-width: 100%;
+    padding: 1.3889vh 0.7813vw;
+    margin: 1vh 0;
+    border-bottom: 0.052vw solid #e1e1e1;
+}
+
+.cantier-data-summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2vh;
+}
+
+.cantier-data-summary-item-row {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5vw;
+    align-items: center;
+}
+
+.cantier-data-summary-grid-single-row {
+    display: grid;
+    gap: 2vh 0.25vw;
+    align-items: center;
+    margin-top: 0;
+    padding-top: 2vh !important;
+    padding-bottom: 2vh !important;
+}
+
+.cantier-data-summary-label {
+    font-size: var(--font-md);
+    font-weight: 600;
+    line-height: normal;
+}
+
+.cantier-data-summary-value {
+    font-size: var(--font-md);
+    font-weight: 400;
+    color: #323130;
+    line-height: normal;
+    word-break: break-word;
+}
+
+.cantier-data-summary-value.cantier-data-summary-undefined {
+    color: #a19f9d;
+    font-style: italic;
+}
+
+.cantier-data-summary-more-indicator {
+    text-align: center;
+    margin-top: 2vh;
+    padding-top: 2vh;
+    border-top: 1px solid #e1e1e1;
+}
+
+.cantier-data-summary-more-text {
+    font-size: var(--font-sm);
+    color: #605e5c;
+    font-style: italic;
+}
+
+@media screen and (max-width: 768px) {
+    .cantier-data-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.833vw 0.625vw;
+    }
+
+    .cantier-data-summary-expand-btn {
+        width: 2.5vh;
+        height: 2.5vh;
+    }
+
+    .cantier-data-summary-expand-btn svg {
+        width: 1.8vh;
+        height: 1.8vh;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .cantier-data-summary-grid {
+        grid-template-columns: 1fr;
+        gap: 0.625vw;
+    }
+
+    .cantier-data-summary-container {
+        padding: 0.625vw;
+    }
+
+    .cantier-data-summary-header {
+        margin-bottom: 1.5vh;
+    }
+
+    .cantier-data-summary-container-sliderform {
+        padding: 0.625vw;
+    }
+}

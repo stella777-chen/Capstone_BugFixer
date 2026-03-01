@@ -1,0 +1,47 @@
+.CantierSecondaryCard {
+    --fui-Card--size: 1.5vh;
+    --fui-Card--border-radius: 0.2vw;
+    gap: 0;
+
+    .card_icon {
+        color: var(--cardColor);
+
+        svg {
+            height: 5vh !important;
+            width:var(--font-xxl) !important;
+        }
+    }
+
+    .card_header_text {
+        color: #242424;
+        line-height: 3vh;
+        font-weight: bold;
+       font-size: var(--font-md);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 90%;
+        display: block;
+    }
+
+    .card_caption {
+        color: #242424;
+        font-size: var(--font-sm);
+        line-height: 2.5vh;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+        display: block;
+    }
+
+    .card_value {
+        color: var(--cardColor);
+        padding: 1.2vh 0.63vw;
+        margin: 0;
+        text-align: right;
+        font-weight: bold;
+        font-size: var(--font-xl);
+        line-height: 2vh;
+    }
+}
