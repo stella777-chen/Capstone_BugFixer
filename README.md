@@ -33,7 +33,13 @@ backend/
 
 ## 3. Environment Setup
 
+### Create a virtual environment
+
+python -m venv venv
+
 ### Activate Virtual Environment:
+
+
 Windows (PowerShell): 
 .\venv\Scripts\activate
 
@@ -44,9 +50,19 @@ Mac/Linux:
 source venv/bin/activate
 
 ### Install Dependencies:
-pip install fastapi uvicorn jsonschema openai python-dotenv referencing
+pip install -r requirements.txt
 
-## 4. Run Backend
+## 4. Create .env file
+
+### Inside the backend directory, create a file named:
+
+.env
+
+### Add your DeepSeek API key:
+
+DEEPSEEK_API_KEY=your_api_key_here
+
+## 5. Run Backend
 
 ### Start server using:
 uvicorn app3:app --reload
@@ -54,7 +70,7 @@ uvicorn app3:app --reload
 If successful, you will see:
 Uvicorn running on http://127.0.0.1:8000
 
-## 5. API Endpoints
+## 6. API Endpoints
 
 ### Health Check:
 
@@ -96,7 +112,7 @@ Example Query – Defect Distribution
 
 }
 
-## 6. Query Response Convention
+## 7. Query Response Convention
 
 KPI → data.value
 
@@ -148,7 +164,7 @@ Example Distribution Response
 
 }
 
-## 7. Generate UI (Demo Mode)
+## 8. Generate UI (Demo Mode)
 
 POST /generate-ui
 
@@ -160,17 +176,17 @@ Example:
 
 Backend will generate QueryMOMV1 objects and return a validated UIConfigV3 JSON.
 
-## 8. Swagger Documentation
+## 9. Swagger Documentation
 
 Visit: http://127.0.0.1:8000/docs
 
 Test all endpoints directly from Swagger UI.
 
-## 9. MOM Data Model Reference
+## 10. MOM Data Model Reference
 
 MOM Demo – Data Model & Synthetic Data Design (v1) – https://docs.google.com/document/d/1TN7B7tRFx38kBkohVxwWzqCP3ayrDrKwK2MHfzfZ2L4/edit?tab=t.0
 
-## 10. Architecture Overview
+## 11. Architecture Overview
 
 User Prompt--Generate UI--UIConfigV3--QueryMOMV1--Backend Execution (Mock)--Frontend Rendering
 
