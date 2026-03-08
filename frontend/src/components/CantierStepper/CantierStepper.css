@@ -1,0 +1,106 @@
+/* Container styles */
+.stepper-container {
+  /* width: 80%;
+  padding: 0 20px; */
+  margin: 1.1% auto 0 auto;
+}
+
+.stepper-header {
+  width: fit-content;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* Stepper Circle & Label */
+.step-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: initial;
+}
+
+.step-circle-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0 3vw;
+  cursor: pointer;
+}
+
+.step-circle {
+  width: 2.5vh;
+  height: 2.5vh;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.5vh;
+  font-weight: normal;
+  position: relative;
+  z-index: 2;
+}
+
+.step-line {
+  width: 4vw;
+  height: 0.5vh;
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+}
+
+.step-line.left {
+  right: 60%;
+}
+
+.step-line.right {
+  left: 80%;
+}
+
+.step-label {
+  font-weight: 500;
+  text-align: center;
+  /* width: 8vw; */
+  font-size: 0.73vw;
+}
+
+/* Icon */
+.step-icon {
+  font-size: 1.2vw;
+  margin-bottom: 1vh;
+  width: 1.2vw;
+  height: 3vh;
+}
+
+/* Tab Content */
+.tab-content {
+  /* padding: 20px; */
+  margin-top: 5vh;
+  min-height: 30vh;
+}
+.stepper-form-root {
+  padding: 1.3889vh 0.7813vw;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 0.11%;
+}
+.stepper-heading {
+  font-size: 0.8854vw;
+  font-weight: bold;
+}
+.stepper-body {
+  height: 50vh;
+  overflow-y: scroll;
+  max-height: 50vh;
+  min-height: 20vh;
+  margin-top: 1vh;
+}
+/* Buttons */
+.button-container {
+  margin-top: 0vh !important;
+  justify-content: end;
+  padding: 1.3889vh 0.7813vw;
+}

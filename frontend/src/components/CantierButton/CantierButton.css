@@ -1,0 +1,76 @@
+.cantier_btn {
+  font-size:var(--font-md);
+  margin: 0.2604vw;
+  padding: 0.75vh 2vw;
+  min-width: 5vw;
+  border-radius: var(--border-radius);
+  line-height: 2.5vh;
+}
+.cantier_btn svg{
+    width: 2.04vh;
+    height: 2.04vh;
+}
+.cantier_btn span{
+    font-size: 1.04vw;
+    height: 2.04vh;
+    width:  2.04vh;
+}
+
+/* @media (min-width: 769px) and (max-width: 1024px) {
+    .cantier_btn {
+        font-size: 1.04vw; 
+        margin: 0.5208vw;
+        padding: 0.5208vw 1.25vw; 
+    }
+
+    .cantier_btn svg {
+        width: 1.5vw;
+        height: 1.5vw;
+    }
+
+    .cantier_btn span {
+        font-size: 1.5vw; 
+        height: 1.5vw;
+        width: 1.5vw;
+    }
+}
+
+@media (max-width: 768px) {
+    .cantier_btn {
+        font-size: 1.25vw;
+        margin: 1vw;
+        padding: 1vw 2vw;
+        min-width: 8vw;
+    }
+
+    .cantier_btn svg {
+        width: 2vw;
+        height: 2vw;
+    }
+
+    .cantier_btn span {
+        font-size: 2vw;
+        height: 2vw;
+        width: 2vw;
+    }
+}
+
+@media (max-width: 480px) {
+    .cantier_btn {
+        font-size: 1.5vw;
+        margin: 1.25vw;
+        padding: 1.25vw 2.5vw;
+        min-width: 10vw;
+    }
+
+    .cantier_btn svg {
+        width: 2.5vw;
+        height: 2.5vw;
+    }
+
+    .cantier_btn span {
+        font-size: 2.5vw;
+        height: 2.5vw;
+        width: 2.5vw;
+    }
+} */

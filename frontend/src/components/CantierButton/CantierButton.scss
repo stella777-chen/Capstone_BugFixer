@@ -1,0 +1,57 @@
+.cantier_btn {
+  font-size:var(--font-md);
+  padding: 0.75vh 0.50vw;
+  min-width: 5vw;
+  border-radius: var(--border-radius);
+  line-height: 2.5vh;
+
+  svg {
+    width: 2.04vh;
+    height: 2.04vh;
+  }
+
+  span {
+    height: 2.04vh;
+    width: 2.04vh;
+  }
+}
+
+/* 📱 Tablet (≤1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .cantier_btn {
+    // font-size: 1rem;
+    padding: 0.5rem 1rem;
+    min-width: 6rem;
+    line-height: 1.5rem;
+
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    span {
+      height: 1.25rem;
+      width: 1.25rem;
+    }
+  }
+}
+
+/* 📱 Mobile (≤768px) */
+@media screen and (max-width: 768px) {
+  .cantier_btn {
+    // font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+    min-width: 5rem;
+    line-height: 1.4rem;
+
+    svg {
+      width: 1.1rem;
+      height: 1.1rem;
+    }
+
+    span {
+      height: 1.1rem;
+      width: 1.1rem;
+    }
+  }
+}

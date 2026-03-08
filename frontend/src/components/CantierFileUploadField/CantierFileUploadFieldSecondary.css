@@ -1,0 +1,91 @@
+.cantier-file-upload-root {
+    display: flex;
+    flex-direction: column;
+    /* padding: 0.46vh 0.26vw; */
+    gap: 0.5vh;
+    width: 100%;
+}
+
+.cantier-file-upload-label {
+    font-size: 1.125vw;
+    font-weight: 400;
+    line-height: initial;
+}
+
+.cantier-file-upload-upload-container {
+    width: 50%;
+    height: 18vh;
+    background-color: #f5f5f5;
+    border: 0.15vw dashed #d1d1d1;
+    /* padding: 2.25vh 4vw;*/
+    align-content: center;
+    border-radius: 4px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.cantier-file-upload-upload-container:hover {
+    background-color: #ffffff;
+    border: 0.15vw dashed var(--color-accent);
+}
+.cantier-file-upload-upload-container svg{
+    width: 1.25vw;
+    height: 2.22vh;
+}
+.cantier-file-upload-upload-container span{
+    font-size: 0.73vw;
+}
+.cantier-file-upload-input {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.cantier-file-upload-preview-container {
+    width: 50%;
+    height: 18vh;
+    display: flex;
+    background-color: #fff;
+    padding: 1vh 0.50vw;
+    border: 1px solid #d1d1d1;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.cantier-file-upload-preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px 4px 0 0;
+}
+
+.cantier-file-upload-remove-button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--color-accent);
+    color: #fff;
+    text-align: center;
+    padding: 0.93vh 0.52vw;
+    border-radius: 0 0 4px 4px;
+    cursor: pointer;
+    font-size: 0.729vw;
+}
+
+.cantier-file-upload-image-container {
+    display: flex;
+    gap: 1vw;
+}
+.cantier-file-upload-remove-button svg{
+    width: 1.25vw;
+    height: 2.22vh;
+}

@@ -1,0 +1,363 @@
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.42vw;
+  height: fit-content;
+  box-sizing: border-box;
+
+  button {
+    margin: 0.26vw 0 !important;
+  }
+}
+
+.popup-title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  font-size: 2vh;
+  line-height: 4vh;
+
+  .popup-title-content {
+    display: flex;
+    align-items: center;
+  }
+
+  .popup-title-icon-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .popup-title-icon {
+    font-size: 1.43vw;
+    margin-right: 0.52vw;
+    color: var(--color-accent);
+    background-color: #e6e6e6;
+    padding: 0.26vw;
+    border-radius: 0.26vw;
+  }
+
+  .popup-title-text {
+    font-size: 0.83vw;
+    color: #1357A5;
+    font-weight: bold;
+  }
+
+  .popup-dismiss-button {
+    position: absolute;
+    top: 0.52vw;
+    right: 0.52vw;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+
+    .popup-close-icon {
+      font-size: 1.04vw;
+      color: #888;
+      margin-top: 0;
+    }
+  }
+}
+
+.fui-DialogSurface {
+  max-width: 30vw;
+  padding: 2vh 1vw;
+}
+
+.fui-DialogSurfaceWide {
+  max-width: 60vw;
+  padding: 2vh 1vw;
+}
+
+.fui-DialogContent {
+  font-size: 1vw;
+  min-height: 2.96vh;
+  padding: 0.19vh 0.10vw;
+  line-height: normal;
+}
+
+.fui-DialogActions {
+  gap: 0;
+}
+
+.r1h3qql9 {
+  gap: 1vh !important;
+}
+
+// ==============================
+// 📱 Tablet (≤1024px)
+// ==============================
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .popup-title-wrapper {
+    font-size: 1.2rem;
+    line-height: 2rem;
+
+    .popup-title-icon {
+      font-size: 1.25rem;
+      margin-right: 0.75rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+    }
+
+    .popup-title-text {
+      font-size: 1rem;
+    }
+
+    .popup-dismiss-button {
+      top: 0.5rem;
+      right: 0.5rem;
+
+      .popup-close-icon {
+        font-size: 1.25rem;
+      }
+    }
+  }
+
+  .fui-DialogSurface {
+    max-width: 80%;
+    padding: 1.5rem 1rem;
+  }
+
+  .fui-DialogContent {
+    font-size: 1rem;
+    margin: 0;
+    padding: 0;
+    // margin-left: 2rem;
+    line-height: normal;
+  }
+
+  .dialog-actions {
+    gap: 0.75rem;
+  }
+}
+
+// ==============================
+// 📱 Mobile (≤768px)
+// ==============================
+@media screen and (max-width: 768px) {
+  .popup-title-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 1rem;
+
+    .popup-title-icon {
+      font-size: 1rem;
+      margin-right: 0.5rem;
+      padding: 0.4rem;
+      border-radius: 0.4rem;
+    }
+
+    .popup-title-text {
+      font-size: 0.95rem;
+    }
+
+    .popup-dismiss-button {
+      top: 0.5rem;
+      right: 0.5rem;
+
+      .popup-close-icon {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .fui-DialogSurface {
+    max-width: 70%;
+    padding: 1rem 0.75rem;
+  }
+
+  .fui-DialogContent {
+    font-size: 0.75rem;
+    margin: 0;
+    padding: 0;
+    // margin-left: 2.5625rem; 
+    line-height: normal;
+  }
+
+  .dialog-actions {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+}.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.42vw;
+  height: fit-content;
+  box-sizing: border-box;
+
+  button {
+    margin: 0.26vw 0 !important;
+  }
+}
+
+.popup-title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  font-size: 2vh;
+  line-height: 4vh;
+
+  .popup-title-content {
+    display: flex;
+    align-items: center;
+  }
+
+  .popup-title-icon-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .popup-title-icon {
+    font-size: 1.43vw;
+    margin-right: 0.52vw;
+    color: var(--color-accent);
+    background-color: #e6e6e6;
+    padding: 0.26vw;
+    border-radius: 0.26vw;
+  }
+
+  .popup-title-text {
+    font-size: 0.83vw;
+    color: #1357A5;
+    font-weight: bold;
+  }
+
+  .popup-dismiss-button {
+    position: absolute;
+    top: 0.52vw;
+    right: 0.52vw;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+
+    .popup-close-icon {
+      font-size: 1.04vw;
+      color: #888;
+      margin-top: 0;
+    }
+  }
+}
+
+.fui-DialogSurface {
+  max-width: 30vw;
+  padding: 2vh 1vw;
+}
+
+.fui-DialogContent {
+  font-size: 1vw;
+  min-height: 2.96vh;
+  padding: 0.19vh 0.10vw;
+  line-height: normal;
+}
+
+.fui-DialogActions {
+  gap: 0;
+}
+
+.r1h3qql9 {
+  gap: 1vh !important;
+}
+
+// ==============================
+// 📱 Tablet (≤1024px)
+// ==============================
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .popup-title-wrapper {
+    font-size: 1.2rem;
+    line-height: 2rem;
+
+    .popup-title-icon {
+      font-size: 1.25rem;
+      margin-right: 0.75rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+    }
+
+    .popup-title-text {
+      font-size: 1rem;
+    }
+
+    .popup-dismiss-button {
+      top: 0.5rem;
+      right: 0.5rem;
+
+      .popup-close-icon {
+        font-size: 1.25rem;
+      }
+    }
+  }
+
+  .fui-DialogSurface {
+    max-width: 80%;
+    padding: 1.5rem 1rem;
+  }
+
+  .fui-DialogContent {
+    font-size: 1rem;
+    margin: 0;
+    padding: 0;
+    // margin-left: 2rem;
+    line-height: normal;
+  }
+
+  .dialog-actions {
+    gap: 0.75rem;
+  }
+}
+
+// ==============================
+// 📱 Mobile (≤768px)
+// ==============================
+@media screen and (max-width: 768px) {
+  .popup-title-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 1rem;
+
+    .popup-title-icon {
+      font-size: 1rem;
+      margin-right: 0.5rem;
+      padding: 0.4rem;
+      border-radius: 0.4rem;
+    }
+
+    .popup-title-text {
+      font-size: 0.95rem;
+    }
+
+    .popup-dismiss-button {
+      top: 0.5rem;
+      right: 0.5rem;
+
+      .popup-close-icon {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .fui-DialogSurface {
+    max-width: 70%;
+    padding: 1rem 0.75rem;
+  }
+
+  .fui-DialogContent {
+    font-size: 0.75rem;
+    margin: 0;
+    padding: 0;
+    // margin-left: 2.5625rem; 
+    line-height: normal;
+  }
+
+  .dialog-actions {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+}

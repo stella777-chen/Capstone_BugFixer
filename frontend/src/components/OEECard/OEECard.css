@@ -1,0 +1,382 @@
+.oee-card {
+    background-color: white;
+    border-radius: 0.4vw;
+    box-shadow: 0 0.05vh 0.15vh rgba(0, 0, 0, 0.1);
+    border: 0.05vw solid #e5e7eb;
+    padding: 1.25vw;
+    font-family: "Segoe UI", sans-serif;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 25vh;
+}
+
+/* Header */
+.oee-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1.25vw;
+}
+
+.oee-card-title {
+    font-size: 0.94vw;
+    font-weight: 600;
+    color: #111827;
+    margin: 0 0 0.2vh 0;
+}
+
+.oee-card-description {
+    font-size: 0.73vw;
+    color: #6b7280;
+    margin: 0;
+}
+
+.oee-card-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3vh 0.63vw;
+    border-radius: 1.04vw;
+    font-size: 0.73vw;
+    font-weight: 500;
+    margin-left: 0.83vw;
+    white-space: nowrap;
+}
+
+.oee-card-status.online {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.oee-card-status.offline {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+/* Main Content */
+.oee-card-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25vw;
+    gap: 1.25vw;
+}
+
+/* Image */
+.oee-card-image {
+    flex-shrink: 0;
+}
+
+.oee-card-image-container {
+    width: 7.81vw;
+    height: 7.81vw;
+    background-color: #f3f4f6;
+    border-radius: 0.4vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.oee-card-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.4vw;
+}
+
+/* OEE Progress Circle */
+.oee-card-progress {
+    flex-shrink: 0;
+}
+
+.oee-progress-wrapper {
+    position: relative;
+    width: 6.25vw;
+    height: 6.25vw;
+}
+
+.oee-progress-svg {
+    width: 6.25vw;
+    height: 6.25vw;
+    transform: rotate(-90deg);
+}
+
+.oee-progress-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.oee-text {
+    font-size: 0.73vw;
+    color: #6b7280;
+    margin-bottom: 0.2vh;
+}
+
+.oee-percentage-text {
+    font-size: 1.46vw;
+    font-weight: bold;
+}
+
+/* Metrics */
+.oee-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.83vw;
+    margin-bottom: 1.25vw;
+    padding-bottom: 1.25vw;
+    border-bottom: 0.05vw solid #e5e7eb;
+    flex-grow: 1;
+    align-content: start;
+}
+
+.oee-metric-item {
+    text-align: center;
+}
+
+.oee-metric-label {
+    font-size: 0.63vw;
+    color: #6b7280;
+    margin: 0 0 0.2vh 0;
+}
+
+.oee-metric-value {
+    font-size: 0.83vw;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+/* Action Buttons */
+.oee-card-actions {
+    display: flex;
+    gap: 0.63vw;
+    justify-content: center;
+}
+
+.oee-action-btn {
+    flex: 1;
+    padding: 0.63vh 1.25vw;
+    border: none;
+    border-radius: 0.31vw;
+    font-size: 0.73vw;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.oee-btn-downtime {
+    background-color: #f97316;
+    color: white;
+}
+
+.oee-btn-downtime:hover {
+    background-color: #ea580c;
+    transform: translateY(-0.05vh);
+    box-shadow: 0 0.2vh 0.31vw rgba(249, 115, 22, 0.3);
+}
+
+.oee-btn-dashboard {
+    background-color: #f97316;
+    color: white;
+}
+
+.oee-btn-dashboard:hover {
+    background-color: #ea580c;
+    transform: translateY(-0.05vh);
+    box-shadow: 0 0.2vh 0.31vw rgba(249, 115, 22, 0.3);
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 1024px) {
+    .oee-card {
+        padding: 1.5vw;
+        min-height: 30vh;
+    }
+
+    .oee-card-title {
+        font-size: 1.2vw;
+    }
+
+    .oee-card-description {
+        font-size: 0.9vw;
+    }
+
+    .oee-card-status {
+        font-size: 0.9vw;
+        padding: 0.4vh 0.8vw;
+    }
+
+    .oee-card-image-container {
+        width: 10vw;
+        height: 10vw;
+    }
+
+    .oee-progress-wrapper {
+        width: 8vw;
+        height: 8vw;
+    }
+
+    .oee-progress-svg {
+        width: 8vw;
+        height: 8vw;
+    }
+
+    .oee-text {
+        font-size: 0.9vw;
+    }
+
+    .oee-percentage-text {
+        font-size: 1.8vw;
+    }
+
+    .oee-metric-label {
+        font-size: 0.8vw;
+    }
+
+    .oee-metric-value {
+        font-size: 1vw;
+    }
+
+    .oee-action-btn {
+        font-size: 0.9vw;
+        padding: 0.8vh 1.5vw;
+    }
+}
+
+/* Responsive adjustments for tablets */
+@media (max-width: 768px) {
+    .oee-card {
+        padding: 2vw;
+        min-height: 35vh;
+    }
+
+    .oee-card-main {
+        flex-direction: column;
+        gap: 2vw;
+    }
+
+    .oee-card-title {
+        font-size: 2vw;
+    }
+
+    .oee-card-description {
+        font-size: 1.5vw;
+    }
+
+    .oee-card-status {
+        font-size: 1.5vw;
+        padding: 0.5vh 1.5vw;
+    }
+
+    .oee-card-image-container {
+        width: 20vw;
+        height: 20vw;
+    }
+
+    .oee-progress-wrapper {
+        width: 15vw;
+        height: 15vw;
+    }
+
+    .oee-progress-svg {
+        width: 15vw;
+        height: 15vw;
+    }
+
+    .oee-text {
+        font-size: 1.5vw;
+    }
+
+    .oee-percentage-text {
+        font-size: 3vw;
+    }
+
+    .oee-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5vw;
+    }
+
+    .oee-metric-label {
+        font-size: 1.5vw;
+    }
+
+    .oee-metric-value {
+        font-size: 2vw;
+    }
+
+    .oee-card-actions {
+        flex-direction: column;
+        gap: 1vw;
+    }
+
+    .oee-action-btn {
+        font-size: 1.5vw;
+        padding: 1vh 2vw;
+    }
+}
+
+/* Responsive adjustments for 4K screens */
+@media (min-width: 2560px) {
+    .oee-card {
+        padding: 1vw;
+        min-height: 22vh;
+    }
+
+    .oee-card-title {
+        font-size: 0.7vw;
+    }
+
+    .oee-card-description {
+        font-size: 0.55vw;
+    }
+
+    .oee-card-status {
+        font-size: 0.55vw;
+        padding: 0.25vh 0.5vw;
+    }
+
+    .oee-card-image-container {
+        width: 6vw;
+        height: 6vw;
+    }
+
+    .oee-progress-wrapper {
+        width: 5vw;
+        height: 5vw;
+    }
+
+    .oee-progress-svg {
+        width: 5vw;
+        height: 5vw;
+    }
+
+    .oee-text {
+        font-size: 0.55vw;
+    }
+
+    .oee-percentage-text {
+        font-size: 1.1vw;
+    }
+
+    .oee-metric-label {
+        font-size: 0.5vw;
+    }
+
+    .oee-metric-value {
+        font-size: 0.65vw;
+    }
+
+    .oee-action-btn {
+        font-size: 0.55vw;
+        padding: 0.5vh 1vw;
+    }
+}

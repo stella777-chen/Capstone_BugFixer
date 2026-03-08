@@ -1,0 +1,167 @@
+.MesDashboardContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: fixed;
+  top: 9.2vh;
+  width: 60%;
+  right: 0;
+  padding: 1.5vh 0.75vw;
+  background-color: transparent !important;
+  background: #ffffff;
+  z-index: 10 !important;
+}
+
+.custom-dashboard-box {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.custom-style-box-container {
+  width: 10vw;
+  display: flex;
+  gap: 0.5vw;
+}
+
+.custom-dashboard-icon {
+  min-width: 3.5vw;
+  min-height: 3.5vw;
+  border-radius: 0.35vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--cardColor);
+
+  svg {
+    width: 1.3vw;
+    height: 1.3vw;
+    color: #ffffff;
+  }
+}
+
+.card-text-wrapper {
+  justify-content: space-around;
+  line-height: normal;
+}
+
+.custom-dashboard-label-value {
+  color: #000000;
+  font-size: 1.6vh;
+  white-space: nowrap;
+  display: block;
+}
+
+.dashboard-number-value {
+  color: #000000;
+  font-size: 2.5vh;
+  font-weight: 700;
+  display: block;
+}
+
+.truncate-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 6.25vw;
+}
+
+.tab-container {
+  width: auto;
+  margin-bottom: -11.11vh;
+  padding: 1.04vw;
+}
+
+// ==============================
+// Media Queries
+// ==============================
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .MesDashboardContainer {
+    position: relative;
+    top: 0;
+    z-index: 0;
+    width: unset;
+    padding: 0;
+    justify-content: normal;
+    padding-bottom: 1vh;
+  }
+
+  .custom-dashboard-box {
+    width: 100%;
+  }
+
+  .custom-style-box-container {
+    width: 25%;
+    gap: 0.875rem;
+  }
+
+  .custom-dashboard-icon {
+    min-width: 5rem;
+    min-height: 5rem;
+    border-radius: 0.5rem;
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  .custom-dashboard-label-value {
+    font-size: 0.9rem;
+  }
+
+  .dashboard-number-value {
+    font-size: 1.8rem;
+  }
+
+  .truncate-text {
+    max-width: 100%;
+    font-size: 0.9rem;
+    line-height: normal;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .MesDashboardContainer {
+    position: relative;
+    top: 0;
+    padding: 0;
+    justify-content: normal;
+    padding-bottom: 1vh;
+    z-index: 0;
+    width: unset;
+  }
+
+  .custom-dashboard-box {
+    width: 100%;
+  }
+
+  .custom-style-box-container {
+    width: 50%;
+    gap: 0.5rem;
+  }
+
+  .custom-dashboard-icon {
+    min-width: 4rem;
+    min-height: 4rem;
+    border-radius: 0.5rem;
+
+    svg {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+  }
+
+  .custom-dashboard-label-value {
+    font-size: 0.85rem;
+  }
+
+  .dashboard-number-value {
+    font-size: 1.4rem;
+  }
+
+  .truncate-text {
+    max-width: 100%;
+    font-size: 0.875rem;
+    line-height: normal;
+  }
+}

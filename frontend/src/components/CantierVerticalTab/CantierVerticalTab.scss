@@ -1,0 +1,225 @@
+.vertical-tabList-wrapper {
+    display: flex;
+    flex-direction: row;
+
+    .gridHeader {
+        gap: 0;
+        margin-top: 0px;
+    }
+
+    .vertical-tab-list {
+        flex-basis: 15%;
+        border-right: 1px solid #c7c7c7;
+        padding: 1.5vh 0.75vw;
+
+        button {
+            padding: 0.8vh 0.4vw;
+            column-gap: 0.3vw;
+
+            svg {
+                height: 3vh;
+                width: 1.5vw;
+            }
+
+            .fui-Tab__icon {
+                height: 2vh;
+                width: 1vw;
+                font-size: 1vw;
+            }
+
+            .fui-Tab__content {
+                font-size: 0.75vw;
+                line-height: 2.2vh;
+            }
+
+            .fui-Tab__content--reserved-space {
+                display: none;
+            }
+
+            &::after {
+                background-color: var(--color-accent);
+                height: 2vh;
+                top: 0.80vh;
+                width: 0.17vw;
+                right: auto;
+                left: 0;
+            }
+
+            &:hover::before,
+            &:active::before {
+                background-color: #b3b3b3;
+                height: 2vh;
+                top: 0.80vh;
+                width: 0.17vw;
+                right: auto;
+                left: 0;
+            }
+        }
+    }
+
+    .tab-wrapper {
+        width: 85%;
+        padding: 1.5vh 0.75vw;
+
+        .tab-heading {
+            // padding: 0vmin 0.8vmax;
+            font-size: var(--font-md);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5vw;
+
+            .tab-heading-img {
+                width: 2vw;
+                height: 4vh;
+                border-radius: 1vw;
+            }
+        }
+
+        .data_table {
+            margin: 0;
+        }
+
+        .tab-content {
+            margin-top: 2vh;
+        }
+    }
+}
+
+.cantier-vertical-tab-card {
+    padding: 0;
+}
+
+/* 📱 Tablet (769px - 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .vertical-tabList-wrapper {
+        flex-direction: column;
+         padding: 0.72rem 0.48rem;
+
+        .vertical-tab-list {
+            flex-basis: auto;
+            width: 100%;
+            border-right: none;
+            border-bottom: 1px solid #c7c7c7;
+            flex-direction: row;
+            overflow: auto;
+
+            button {
+                padding: 0.75rem 1rem;
+                column-gap: 0.5rem;
+
+                &::after,
+                &:hover::before,
+                &:active::before {
+                    height: 2.5rem;
+                }
+
+                &.active {
+                    background-color: #f5f5f5;
+                }
+
+                svg {
+                    width: 1.5rem;
+                    height: 1.5rem;
+                }
+
+                .fui-Tab__icon {
+                    font-size: 1.2rem;
+                    width: 1.2rem;
+                    height: 1.2rem;
+                }
+
+                .fui-Tab__content {
+                    font-size: 1rem;
+                    line-height: 1.5rem;
+                }
+            }
+        }
+
+        .tab-wrapper {
+            width: 100%;
+
+            .tab-heading {
+                padding: 0.5rem 0;
+                gap: 0.5rem;
+
+                .tab-heading-img {
+                    width: 2rem;
+                    height: 2rem;
+                    border-radius: 0.75rem;
+                }
+            }
+
+            .tab-content {
+                margin-top: 1.5rem;
+            }
+        }
+    }
+}
+
+/* 📱 Mobile (≤768px) */
+@media screen and (max-width: 768px) {
+    .vertical-tabList-wrapper {
+        flex-direction: column;
+        padding: 0.625rem 0.18rem;
+
+        .vertical-tab-list {
+            flex-basis: auto;
+            width: 100%;
+            border-right: none;
+            border-bottom: 1px solid #c7c7c7;
+            flex-direction: row;
+            overflow: auto;
+
+            button {
+                padding: 0.75rem 1rem;
+                column-gap: 0.5rem;
+
+                &::after,
+                &:hover::before,
+                &:active::before {
+                    height: 2.5rem;
+                }
+
+                &.active {
+                    background-color: #f5f5f5;
+                }
+
+                svg {
+                    width: 1.25rem;
+                    height: 1.25rem;
+                }
+
+                .fui-Tab__icon {
+                    font-size: 1rem;
+                    width: 1rem;
+                    height: 1rem;
+                }
+
+                .fui-Tab__content {
+                    font-size: 0.875rem;
+                    line-height: 1.5rem;
+                }
+            }
+        }
+
+        .tab-wrapper {
+            width: 100%;
+
+            .tab-heading {
+                padding: 0.5rem 0;
+                gap: 0.5rem;
+
+                .tab-heading-img {
+                    width: 1.75rem;
+                    height: 1.75rem;
+                    border-radius: 0.75rem;
+                }
+            }
+
+            .tab-content {
+                margin-top: 1rem;
+            }
+        }
+    }
+}

@@ -1,0 +1,65 @@
+.custom-dashboard-box {
+  display: flex;
+  justify-content: flex-end;
+
+}
+
+.custom-style-box-container {
+  width: 10vw;
+  display: flex;
+  gap: 0.5vw;
+}
+
+.custom-dashboard-icon  {
+  min-width: 3.5vw;
+  min-height: 3.5vw;
+  border-radius: 0.35vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--cardColor);
+}
+
+.custom-dashboard-icon svg {
+  width: 1.3vw;
+  height: 1.3vw;
+  color: #FFFFFF;
+}
+
+.card-text-wrapper {
+  justify-content: space-around;
+  line-height: 2vh;
+}
+
+.custom-dashboard-label-value {
+  color: #000000 !important;
+  font-size: 1.6vh !important;
+  white-space: nowrap !important;
+  display: block !important;
+}
+
+.dashboard-number-value {
+  color: #000000;
+  font-size: 3.5vh;
+  font-weight: 700;
+  display: block;
+}
+
+.truncate-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 6.25vw;
+}
+
+.tab-container {
+  width: auto;
+  margin-bottom: -11.11vh;
+  padding: 1.04vw;
+}
+
+/* @media (max-width: 1250px) {
+  .custom-dashboard-box {
+    position: static;
+  }
+} */

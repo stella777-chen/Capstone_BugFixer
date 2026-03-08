@@ -1,0 +1,478 @@
+.fui-DataGridCell.fui-TableCell {
+    // width: max-content !important;
+    // max-width: inherit !important;
+    height: 4vh;
+    line-height: normal;
+    padding: 0 0.4167vmax;
+    min-height: unset;
+    // border-left: 1px solid #e0e0e0;
+}
+
+.fui-DataGridRow .fui-DataGridHeaderCell {
+    // width: max-content !important;
+    // max-width: inherit !important;
+    height: 4vh;
+    line-height: normal;
+    padding: 0 0.4167vmax;
+    font-weight: 600;
+    border-left: 1px solid #e0e0e0;
+
+    .fui-DataGridHeaderCell__button {
+        min-height: unset;
+    }
+}
+
+// .fui-TableCell:nth-child(even) {
+//     background-color: #f5f5f5;
+// }
+
+// .fui-DataGridHeaderCell:nth-child(even) {
+//     background-color: #f5f5f5;
+// }
+
+.responsive_table {
+    width: 100%;
+    overflow-x: auto;
+    font-size: var(--font-md);
+    // margin-top: 1vh;
+    min-width: 3.13vw !important;
+    table-layout: fixed;
+    border: 1px solid #e0e0e0;
+    border-bottom: none;
+    border-radius: var(--border-radius);
+}
+
+.actionColumn {
+    position: sticky;
+    right: 0;
+    background: white;
+    z-index: 2;
+    min-width: unset !important;
+    max-width: unset !important;
+
+    // box-shadow: -1px 0 0 rgba(0, 0, 0, 0.1);
+    .fui-TableCellLayout {
+        justify-content: center;
+    }
+}
+
+.datagrid_container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1.6vh;
+    // padding: 0vmin 0.8vmax;
+}
+
+.fui-DataGridRow.fui-TableRow {
+
+    // Selected state
+    &[aria-selected="true"] {
+        background-color: #ebf3fc;
+
+        .fui-TableCell,
+        .fui-DataGridHeaderCell,
+        .actionColumn {
+            background-color: #ebf3fc;
+        }
+    }
+
+    // Active state
+    &:active {
+        background-color: #e0e0e0;
+
+        .actionColumn {
+            background-color: #e0e0e0;
+        }
+    }
+
+    // Hover state
+    &:hover {
+        background-color: #f5f5f5 !important;
+
+        .actionColumn {
+            background-color: #f5f5f5;
+        }
+    }
+}
+
+
+
+//Pagination
+.paginationBtn {
+    font-size: var(--font-md);
+    /* 20px */
+    cursor: pointer;
+    border-radius: 0.3vh;
+    padding: 0.1vw 0.21vw;
+    /* 2px 4px */
+    box-shadow: 0vw 0.05vw 0.05vw 0vw rgba(0, 0, 0, 0.1),
+        0vw 0vw 0vw 0.05vw rgba(70, 79, 96, 0.16),
+        0vw 0.1vw 0.26vw 0vw rgba(89, 96, 120, 0.1);
+}
+
+.paginationBtn:hover {
+    background: #ebebeb;
+}
+
+.paginationBtnDisabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.2;
+}
+
+.paginationBtn_wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.paginationBtn:active {
+    background-color: #b9b9b9;
+}
+
+.pagnationInfo {
+    margin: auto 0.52vw;
+    /* 10px */
+}
+
+.paginationContainer {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    /* width: 98%; */
+    // padding: 1vh 0;
+    /* 5px */
+    font-size: var(--font-md);
+}
+
+.pagination_wrapper {
+    display: flex;
+}
+
+.paginationSelect {
+    margin: 0 0.26vw;
+    /* 5px */
+    padding: 0.26vw;
+    /* 5px */
+    border: none;
+    font-size: var(--font-md);
+}
+
+.paginationSelect:focus-visible {
+    outline: none;
+}
+
+.paginationSelect_wrapper {
+    margin: 0 0.52vw;
+    /* 10px */
+}
+
+.paginationSelect_wrapper label {
+    justify-self: center;
+}
+
+//Action Button
+.actionBtn {
+    border: none;
+    background: none;
+    max-width: 4vh;
+    min-width: 4vh;
+
+    svg {
+        width: 2vh;
+        height: 2vh;
+    }
+}
+
+//Check box
+.fui-DataGridSelectionCell {
+    max-width: 2vw;
+    min-width: 2vw;
+
+    .fui-Checkbox__indicator {
+        height: 1.6vh;
+        width: 1.6vh;
+        margin: 0.7407vh 0.4167vw;
+        border-width: 0.1vw;
+        border-radius: 0.3vh;
+    }
+}
+
+.fui-Avatar {
+    width: 3vh;
+    height: 3vh;
+    font-size: var(--font-md);
+}
+
+.fui-PresenceBadge {
+    svg {
+        width: 1vh;
+        height: 1vh;
+    }
+}
+
+.fui-Avatar__initials {
+    mask-image: none;
+}
+
+// .fui-TableCellLayout__media {
+//     svg {
+//         font-size: 2vh;
+//     }
+// }
+
+.fui-TableResizeHandle {
+    margin: 0px;
+}
+
+.noData {
+    text-align: center;
+    padding: 1vh 0.5vw;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.fui-MenuPopover {
+    padding: 1vh 0.5vw;
+    max-width: 12vw;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+
+    .fui-MenuItem {
+        padding: 0.5vh 0.275vw;
+        min-width: unset;
+        min-height: unset;
+
+        .fui-MenuItem__content {
+            font-size: var(--font-md);
+            line-height: normal;
+        }
+    }
+}
+
+.center_align {
+    justify-content: center;
+}
+
+.left_align {
+    justify-content: left;
+}
+
+.right_align {
+    justify-content: right;
+}
+
+.gridHeader_btnWrapper .mobile_table_btn {
+    display: none;
+}
+
+/* 📱 Mobile (<= 768px) */
+@media screen and (max-width: 768px) {
+    .responsive_table {
+        // margin-top: 1.3rem;
+        min-width: 7rem !important;
+    }
+
+    .paginationContainer {
+        // padding: 1rem 0;
+        flex-wrap: wrap;
+        justify-content: end;
+        gap: 0.6rem;
+    }
+
+    .paginationBtn {
+
+        padding: 0.3rem 0.5rem;
+    }
+
+    .paginationSelect {
+        padding: 0.4rem;
+        margin: 0 0.4rem;
+    }
+
+    .actionBtn {
+        max-width: 2.2rem;
+        min-width: 2.2rem;
+
+        svg {
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+
+    .fui-Avatar {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .fui-DataGridSelectionCell {
+        max-width: 2.5rem;
+        min-width: 2.5rem;
+
+        .fui-Checkbox__indicator {
+            width: 1rem;
+            height: 1rem;
+            margin: 0.6rem 0.5rem;
+            border-width: 0.1rem;
+        }
+    }
+
+    .fui-DataGridCell.fui-TableCell,
+    .fui-DataGridRow .fui-DataGridHeaderCell {
+        height: 2.6rem;
+        padding: 0 0.5rem;
+    }
+
+    .noData {
+        padding: 1rem 0.5rem;
+    }
+
+    .fui-MenuPopover {
+        padding: 0;
+        max-width: 12rem;
+
+        .fui-MenuItem {
+            padding: 0.6rem 0.5rem;
+        }
+    }
+
+    .gridHeader_btnWrapper {
+        .desktop_table_btn {
+            display: none;
+        }
+
+        .mobile_table_btn {
+            display: block;
+        }
+
+        .mobile_table_btn .fui-Button {
+            border: 0.01rem solid #ccc;
+            border-radius: var(--border-radius);
+            padding: 0.2rem;
+        }
+
+        .fui-Button__icon {
+            color: #242424;
+        }
+
+        :hover .fui-Button__icon {
+            color: #242424;
+        }
+
+        .fui-MenuItem__icon {
+            color: #242424;
+        }
+
+        :hover .fui-MenuItem__icon {
+            color: #242424;
+        }
+    }
+
+    .gridHeader_filterText {
+        display: none;
+    }
+
+    // .gridHeader_searchWrapper svg {
+    //     font-size: 1.3rem;
+    // }
+
+}
+
+/* 💻 Tablet (769px - 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .responsive_table {
+        // margin-top: 1.4rem;
+        min-width: 8rem !important;
+    }
+
+    .paginationContainer {
+        // padding: 1rem 0;
+        flex-wrap: wrap;
+        // justify-content: space-between;
+        gap: 0.5rem;
+    }
+
+    .paginationBtn {
+        padding: 0.3rem 0.6rem;
+    }
+
+    .paginationSelect {
+        padding: 0.4rem;
+        margin: 0 0.4rem;
+    }
+
+    .actionBtn {
+        max-width: 2.4rem;
+        min-width: 2.4rem;
+
+        svg {
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+    }
+
+    .fui-Avatar {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .fui-DataGridSelectionCell {
+        max-width: 2.6rem;
+        min-width: 2.6rem;
+
+        .fui-Checkbox__indicator {
+            width: 1rem;
+            height: 1rem;
+            margin: 0.6rem 0.5rem;
+            border-width: 0.1rem;
+        }
+    }
+
+    .fui-DataGridCell.fui-TableCell,
+    .fui-DataGridRow .fui-DataGridHeaderCell {
+        height: 2.8rem;
+        padding: 0 0.6rem;
+    }
+
+    .noData {
+        padding: 1rem 0.6rem;
+    }
+
+    .fui-MenuPopover {
+        padding: 0;
+        max-width: 12rem;
+
+        .fui-MenuItem {
+            padding: 0.7rem 0.6rem;
+        }
+    }
+}
+
+.cantier-status-chip {
+    display: inline-flex;
+    align-items: center;
+    // padding: 0.2vh 0.8vw;
+    border-radius: 0.6vw;
+    font-size: var(--font-md);
+    font-weight: 600;
+    white-space: nowrap;
+
+    &.no-dot {
+        padding: 0.2vh 0.8vw;
+    }
+
+    .cantier-status-dot {
+        width: 0.5vw;
+        height: 0.5vw;
+        background-color: var(--status-color);
+        border-radius: 50%;
+        margin-right: 0.3vw;
+        display: inline-block;
+    }
+
+    .cantier-status-label {
+        line-height: normal;
+        font-weight: 400 !important;
+    }
+}

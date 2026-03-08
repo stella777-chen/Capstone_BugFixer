@@ -1,0 +1,55 @@
+.tabList-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.tabList {
+  /* position: relative;
+  top: 1vh; */
+  display: flex;
+  color: var(--color-primary);
+  overflow: auto;
+  padding: 0.35vw 0;
+  gap: 1vw;
+  margin-bottom: 1vh;
+}
+
+.tabList button {
+  padding: 1vh 0;
+  color: var(--color-primary);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.tabList button:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.tabList button::after,
+.tabList button::before {
+  content: '';
+  height: 0.3vh;
+  position: absolute;
+  left: 0.5vh;
+  right: 0.5vh;
+}
+
+.tabList span {
+  font-size: var(--font-md);
+  line-height: normal;
+  color: #000000 !important;
+}
+
+.tabList .tab:hover button {
+  color: var(--color-accent);
+}
+
+.tabList .selected-tab button {
+  color: var(--color-accent) !important;
+  font-weight: 700 !important;
+}
