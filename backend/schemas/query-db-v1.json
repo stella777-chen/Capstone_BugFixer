@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cantier.demo/schemas/query-db-v1.json",
+  "title": "QueryDBV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["dataset", "time"],
+  "properties": {
+    "dataset": {
+      "type": "string",
+      "enum": [
+        "wip_production_status",
+        "wip_lot_status",
+        "wip_scrap_rate",
+        "wip_defect_rate",
+        "wip_aging_bucket",
+        "wip_rework_rate",
+        "wip_yield_summary"
+      ]
+    },
+    "time": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": { "type": "string", "enum": ["relative", "absolute"] },
+        "range": { "type": "string", "enum": ["today", "7d", "30d", "90d", "week", "month"] },
+        "start": { "type": "string", "format": "date" },
+        "end": { "type": "string", "format": "date" },
+        "dateField": { "type": "string", "default": "record_date" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "mode": { "const": "relative" } }, "required": ["mode"] },
+          "then": { "required": ["range"] }
+        },
+        {
+          "if": { "properties": { "mode": { "const": "absolute" } }, "required": ["mode"] },
+          "then": { "required": ["start", "end"] }
+        }
+      ]
+    },
+    "filters": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/Filter" }
+    },
+    "groupBy": {
+      "type": "array",
+      "maxItems": 5,
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "measures": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": { "$ref": "#/$defs/Measure" }
+    },
+    "sort": {
+      "type": "array",
+      "maxItems": 3,
+      "items": { "$ref": "#/$defs/SortItem" }
+    },
+    "limit": { "type": "integer", "minimum": 1, "maximum": 500 },
+    "page": { "type": "integer", "minimum": 0 },
+    "pageSize": { "type": "integer", "minimum": 1, "maximum": 200 }
+  },
+  "allOf": [
+    { "if": { "required": ["page"] }, "then": { "required": ["pageSize"] } },
+    { "if": { "required": ["pageSize"] }, "then": { "required": ["page"] } },
+    { "not": { "required": ["limit", "page"] } },
+
+    {
+      "if": { "properties": { "dataset": { "const": "wip_scrap_rate" } }, "required": ["dataset"] },
+      "then": { "$ref": "#/$defs/Dataset_wip_scrap_rate" }
+    },
+    {
+      "if": { "properties": { "dataset": { "const": "wip_rework_rate" } }, "required": ["dataset"] },
+      "then": { "$ref": "#/$defs/Dataset_wip_rework_rate" }
+    },
+    {
+      "if": { "properties": { "dataset": { "const": "wip_defect_rate" } }, "required": ["dataset"] },
+      "then": { "$ref": "#/$defs/Dataset_wip_defect_rate" }
+    },
+    {
+      "if": { "properties": { "dataset": { "const": "wip_aging_bucket" } }, "required": ["dataset"] },
+      "then": { "$ref": "#/$defs/Dataset_wip_aging_bucket" }
+    },
+    {
+      "if": { "properties": { "dataset": { "const": "wip_lot_status" } }, "required": ["dataset"] },
+      "then": { "$ref": "#/$defs/Dataset_wip_lot_status" }
+    },
+    {
+      "if": { "properties": { "dataset": { "const": "wip_production_status" } }, "required": ["dataset"] },
+      "then": { "$ref": "#/$defs/Dataset_wip_production_status" }
+    },
+    {
+      "if": { "properties": { "dataset": { "const": "wip_yield_summary" } }, "required": ["dataset"] },
+      "then": { "$ref": "#/$defs/Dataset_wip_yield_summary" }
+    }
+  ],
+  "$defs": {
+    "Filter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "op", "value"],
+      "properties": {
+        "field": { "type": "string" },
+        "op": { "type": "string", "enum": ["=", "!=", "in", ">", ">=", "<", "<=", "between", "contains"] },
+        "value": { "type": ["string", "number", "boolean", "array"] }
+      }
+    },
+    "Measure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "agg", "as"],
+      "properties": {
+        "field": { "type": "string" },
+        "agg": { "type": "string", "enum": ["sum", "avg", "min", "max", "count", "countDistinct"] },
+        "as": { "type": "string", "minLength": 1 }
+      }
+    },
+    "SortItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "dir"],
+      "properties": {
+        "field": { "type": "string" },
+        "dir": { "type": "string", "enum": ["asc", "desc"] }
+      }
+    },
+
+    "Dataset_wip_scrap_rate": {
+      "properties": {
+        "time": {
+          "properties": {
+            "range": { "enum": ["7d", "30d", "90d", "today"] }
+          }
+        }
+      }
+    },
+    "Dataset_wip_rework_rate": {
+      "properties": {
+        "time": {
+          "properties": {
+            "range": { "enum": ["today", "7d", "30d"] }
+          }
+        }
+      }
+    },
+    "Dataset_wip_defect_rate": {},
+    "Dataset_wip_aging_bucket": {
+      "properties": {
+        "filters": {
+          "type": "array",
+          "items": {
+            "if": { "properties": { "field": { "const": "filter_type" } }, "required": ["field"] },
+            "then": { "properties": { "value": { "enum": ["InProgress"] } } }
+          }
+        }
+      }
+    },
+    "Dataset_wip_lot_status": {},
+    "Dataset_wip_production_status": {},
+    "Dataset_wip_yield_summary": {
+      "properties": {
+        "time": {
+          "properties": {
+            "range": { "enum": ["today", "week", "month"] }
+          }
+        }
+      }
+    }
+  }
+}

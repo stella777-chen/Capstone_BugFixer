@@ -13,7 +13,7 @@
       "type": "object",
       "minProperties": 1,
       "maxProperties": 12,
-      "additionalProperties": { "$ref": "https://cantier.demo/schemas/query-mom-v1.json"},
+      "additionalProperties": { "$ref": "https://cantier.demo/schemas/query-db-v1.json"},
       "description": "Map of queryKey -> QueryMOMV1. Frontend executes these queries and injects results into components via ValueRefV1/queryKey."
     },
 
@@ -30,7 +30,8 @@
       "oneOf": [
         { "$ref": "#/$defs/CantierDashBoardCard" },
         { "$ref": "#/$defs/CantierSecondaryCard" },
-        { "$ref": "#/$defs/CantierDataGrid" }
+        { "$ref": "#/$defs/CantierDataGrid" },
+        { "$ref": "#/$defs/CantierHistogram" }
       ]
     },
 
@@ -183,6 +184,44 @@
           "enum": ["text", "number", "date", "datetime", "enum"],
           "default": "text"
         }
+      }
+    },
+
+      "ChartDataRefV1": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["queryKey", "path", "xField", "yField"],
+        "properties": {
+          "queryKey": {
+            "type": "string",
+            "description": "Key of a query defined in top-level queries"
+          },
+          "path": {
+            "type": "string",
+            "description": "Path to the array data in the query response, e.g. 'rows' or 'data.rows'"
+          },
+          "xField": {
+            "type": "string",
+            "description": "Field in each row used for the x-axis"
+          },
+          "yField": {
+            "type": "string",
+            "description": "Field in each row used for the y-axis"
+          }
+        }
+      },
+
+    "CantierHistogram": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "title", "dataRef"],
+      "properties": {
+        "type": { "const": "CantierHistogram" },
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "dataRef": { "$ref": "#/$defs/ChartDataRefV1" },
+        "xAxisLabel": { "type": "string" },
+        "yAxisLabel": { "type": "string" }
       }
     }
   }
