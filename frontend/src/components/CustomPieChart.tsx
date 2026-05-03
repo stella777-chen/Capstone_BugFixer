@@ -1,54 +1,50 @@
-import React, { useState } from "react";
-import { PieChart, Pie, Cell, Legend, Tooltip } from "recharts";
+import React, { useEffect, useRef, useState } from "react";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 interface CustomPieChartProps {
-  chartTitle: string;
-  
   chartData: { legend: string; data: number; color: string }[];
 }
 
-const CustomPieChart: React.FC<CustomPieChartProps> = ({ chartTitle, chartData }) => {
-  const [showAllLegend, setShowAllLegend] = useState(false);
-  const legendLimit = 3; // Max legends to show before "Show more"
+const minHeight = 250;
+const aspectRatio = 2; // Square aspect ratio for pie chart
 
-  const displayedLegends = showAllLegend ? chartData : chartData.slice(0, legendLimit);
-  const hasMore = chartData.length > legendLimit;
+const CustomPieChart: React.FC<CustomPieChartProps> = ({ chartData }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(minHeight);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver(([entry]) => {
+      const width = entry.contentRect.width;
+      const containerHeight = entry.contentRect.height;
+      const nextHeight = Math.max(minHeight, width / aspectRatio, containerHeight);
+      setHeight((prev) => (Math.abs(prev - nextHeight) < 1 ? prev : nextHeight));
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center"}}>
-      <h4 style={{ marginBottom: "10px" }}>{chartTitle}</h4>
-      <PieChart style={{ width: "100%", height: "100%" }} width={400} height={200}>
-        <Pie
-          data={chartData}
-          cx="50%"
-          cy="50%"
-          outerRadius={90}
-          dataKey="data"
-          nameKey="legend"
-        >
-          {chartData.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={entry.color} />
-          ))}
-        </Pie>
-        <Tooltip />
-      </PieChart>
-
-      {/* Custom Legend */}
-      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "10px", marginTop: "5px" }}>
-        {displayedLegends.map((item, index) => (
-          <div key={index} style={{ display: "flex", alignItems: "center", fontSize: "12px" }}>
-            <div style={{ width: "10px", height: "10px", backgroundColor: item.color, marginRight: "5px" }}></div>
-            {item.legend}
-          </div>
-        ))}
-        {hasMore && !showAllLegend && (
-          <span
-            style={{ color: "#2886de", cursor: "pointer", fontSize: "12px" }}
-            onClick={() => setShowAllLegend(true)}
-          >
-            {chartData.length - legendLimit} more
-          </span>
-        )}
+    <div style={{ textAlign: "center", display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
+      <div ref={containerRef} style={{ flex: 1, height: '100%', minHeight }}>
+        <ResponsiveContainer width="100%" height={height}>
+          <PieChart>
+            <Pie
+              data={chartData}
+              cx="50%"
+              cy="50%"
+              outerRadius="95%"
+              dataKey="data"
+              nameKey="legend"
+            >
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend verticalAlign="bottom" align="center" formatter={(value) => String(value)} />
+          </PieChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );

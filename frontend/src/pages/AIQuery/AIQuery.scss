@@ -1,18 +1,96 @@
 .page-root {
   padding: 24px;
+  padding-bottom: 220px;
   display: flex;
   align-items: center;
   flex-direction: column;
   background-color: #f8f7f6;
 }
+
+.page-body {
+  width: 80%;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.debug-panel {
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  padding: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 3px 9px rgba(24, 24, 24, 0.06);
+}
+
+.debug-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.debug-title {
+  margin: 0;
+  font-size: 14px;
+  color: #222;
+}
+
+.debug-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 16px;
+  margin-bottom: 10px;
+}
+
+.debug-row {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  color: #333;
+}
+
+.debug-label {
+  color: #666;
+  min-width: 110px;
+}
+
+.debug-ok {
+  color: #207227;
+  font-weight: 600;
+}
+
+.debug-error {
+  color: #9f1c1c;
+  font-weight: 600;
+}
+
+.debug-block {
+  font-size: 12px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.debug-value {
+  margin-top: 4px;
+  background: #f8f8f8;
+  border-radius: 6px;
+  padding: 8px;
+  word-wrap: break-word;
+}
+
 .page-card {
   width: 80%;
   background: var(--card-background, #fff);
-  border-radius: 8px;
+  border-radius: 16px;
   box-shadow: 0 6px 18px rgba(24, 24, 24, 0.06) ;
-  padding: 24px;
-  margin-bottom: 12px;
+  padding: 16px;
+  margin: 0 auto;
+  align-items: center;
 }
+
 .title {
   margin: 0 0 6px 0;
   color: var(--color-text, #222);
@@ -27,20 +105,101 @@
   gap: 12px;
   width: 100%;
 }
-.textarea-wrap {
+
+.page-footer {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: transparent;
+  z-index: 10;
+  align-items: center;
+}
+
+.page-footer--empty {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  justify-content: center;
+}
+
+.page-footer--history {
+  position: fixed;
+  bottom: 24px;
+  justify-content: center;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.cantier-logo {
+  width: 120px;
+  height: auto;
+}
+
+.suggestions {
+  display: grid;
+  color: #888;
+  padding: 0;
+  width: 100%;
+  margin-top: 48px;
+  margin-bottom: 0;
+  position: static;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 12px;
+}
+
+.suggestion-item {
+  background: var(--neutral-layer, #fff);
+  padding: 12px;
+  height: 160px;
+  border-radius: 16px !important;
+  border: none !important;
+  color: #222;
+  cursor: pointer;
+  box-shadow: 0 3px 9px rgba(24, 24, 24, 0.06);
+}
+
+.empty {
+  color: #888;
+  text-align: center;
+  padding: 0;
+  width: min(90vw, 640px);
+  height: 120px;
+}
+
+
+.input-bar-wrap {
   position: relative;
   width: 100%;
 }
-.textarea {
-  min-height: 120px;
+.query-input {
+  min-height: 88px;
   width: 100%;
   display: block;
-}
-.textarea textarea {
-  width: 100%;
-  min-height: 120px;
-  height: 120px;
+  border: 1px solid #d0d0d0;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
   box-sizing: border-box;
+  resize: vertical;
+  box-shadow: 0 3px 9px rgba(24, 24, 24, 0.06);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.query-input:focus {
+  outline: none;
+  border-color: var(--color-accent, #666);
+  box-shadow: 0 3px 9px rgba(var(--color-accent-rgb, 102, 102, 102), 0.3);
+}
+.query-input:disabled {
+  background: #f3f3f3;
+  cursor: not-allowed;
 }
 .input-overlay {
   position: absolute;
@@ -49,7 +208,7 @@
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.7);
-  border-radius: 6px;
+  border-radius: 8px;
   pointer-events: none;
   z-index: 1;
 }
@@ -59,8 +218,13 @@
 }
 .actions {
   display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
-  margin-top: 12px;
+}
+.composer-hint {
+  color: #666;
+  font-size: 12px;
 }
 .send-btn {
   background: var(--color-accent, #666) !important;
@@ -81,6 +245,7 @@
   color: #222 !important;
   border: none !important;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 .clear-btn {
   background: var(--color-primary, #666) !important;
@@ -94,6 +259,7 @@
   color: #222 !important;
   border: none !important;
   cursor: pointer;
+  transition: all 0.2s ease, color 0.2s ease;
 }
 .history { 
   color: #222;
@@ -120,4 +286,13 @@
   color: #333;
   word-wrap: break-word;
 }
-.empty { color: #888; padding: 8px 0; }
+
+@media (max-width: 900px) {
+  .debug-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .debug-row {
+    flex-wrap: wrap;
+  }
+}

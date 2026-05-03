@@ -1,0 +1,111 @@
+.card-root {
+  width: min(60%, 960px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.card-module-grid {
+  width: min(100%, 1200px);
+  margin-left: auto;
+  margin-right: auto;
+  display: grid;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.card-module-grid--2 {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.card-module-grid--3 {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.card-module-scroll {
+  width: min(100%, 1200px);
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-top: 2px;
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-bottom: 8px;
+  box-sizing: border-box;
+  scroll-padding-left: 2px;
+  scroll-padding-right: 2px;
+  scroll-snap-type: x mandatory;
+}
+
+.card-module-scroll .card-module-item {
+  flex: 0 0 calc((100% - 2 * 16px) / 3);
+  scroll-snap-align: start;
+}
+
+.card-module-item {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-module-item .custom-card {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Allow secondary-card subtitles to wrap in triplet and scroll layouts. */
+.card-module-grid--3 .CantierSecondaryCard .card_caption,
+.card-module-scroll .CantierSecondaryCard .card_caption {
+  display: none;
+}
+
+.card-description {
+  font-size: 14px;
+  color: #666;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.card-dual-container {
+  width: max(80%, 960px);
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.card-dual-container .card-root {
+  flex: 1 1 320px;
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  max-width: 960px;
+}
+
+/* In doublet layouts, each Singlet should fill its grid cell exactly. */
+.doublet-grid > .card-root {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Prevent legacy global custom-card width clamps from shrinking one side. */
+.doublet-grid .custom-card {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
