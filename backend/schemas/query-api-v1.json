@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cantier.demo/schemas/query-api-v1.json",
+  "title": "QueryAPIV1",
+  "description": "Query API Schema - semantic metric-based queries per QUERY_API_SPEC.md, mapped to wip_dashboard database tables",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["metric", "timeRange"],
+  "properties": {
+    "metric": {
+      "type": "string",
+      "description": "Target metric to retrieve",
+      "enum": [
+        "ScrapRate",
+        "ReworkRate",
+        "YieldRate",
+        "DefectDistribution",
+        "WipAgingDistribution",
+        "LotStatusDistribution"
+      ]
+    },
+    "timeRange": {
+      "type": "string",
+      "description": "Time window: today, 7d, 30d, 90d, or custom (requires start/end)",
+      "enum": ["today", "7d", "30d", "90d", "custom"]
+    },
+    "dimension": {
+      "type": "string",
+      "description": "Optional grouping dimension (metric-specific, see allOf constraints)",
+      "enum": ["line", "date", "defect_type", "aging_bucket", "lot_status"]
+    },
+    "start": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Start date (ISO 8601, required when timeRange=custom)"
+    },
+    "end": {
+      "type": "string",
+      "format": "date-time",
+      "description": "End date (ISO 8601, required when timeRange=custom)"
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 500,
+      "description": "Max rows to return (incompatible with page+pageSize)"
+    },
+    "page": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Zero-based page index (use with pageSize)"
+    },
+    "pageSize": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 200,
+      "description": "Rows per page (use with page)"
+    },
+    "orderBy": {
+      "type": "array",
+      "maxItems": 3,
+      "description": "Sort fields and directions",
+      "items": { "$ref": "#/$defs/OrderByV1" }
+    },
+    "filters": {
+      "type": "array",
+      "maxItems": 10,
+      "description": "Optional row-level filters",
+      "items": { "$ref": "#/$defs/FilterMOMV1" }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "timeRange": { "const": "custom" } },
+        "required": ["timeRange"]
+      },
+      "then": { "required": ["start", "end"] }
+    },
+    {
+      "if": {
+        "properties": { "timeRange": { "enum": ["today", "7d", "30d", "90d"] } },
+        "required": ["timeRange"]
+      },
+      "then": {
+        "not": { "anyOf": [{ "required": ["start"] }, { "required": ["end"] }] }
+      }
+    },
+    {
+      "if": { "required": ["page"] },
+      "then": { "required": ["pageSize"], "not": { "required": ["limit"] } }
+    },
+    {
+      "if": { "required": ["pageSize"] },
+      "then": { "required": ["page"], "not": { "required": ["limit"] } }
+    },
+    {
+      "if": {
+        "properties": { "metric": { "const": "ScrapRate" } },
+        "required": ["metric"]
+      },
+      "then": {
+        "properties": {
+          "timeRange": { "enum": ["7d", "30d", "90d", "custom"] }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "metric": { "const": "ReworkRate" } },
+        "required": ["metric"]
+      },
+      "then": {
+        "properties": {
+          "timeRange": { "enum": ["today", "7d", "30d", "custom"] }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "metric": { "const": "YieldRate" } },
+        "required": ["metric"]
+      },
+      "then": {
+        "properties": {
+          "timeRange": { "enum": ["today", "7d", "30d", "90d", "custom"] },
+          "dimension": { "enum": ["line", "date"] }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "metric": { "const": "DefectDistribution" } },
+        "required": ["metric"]
+      },
+      "then": {
+        "properties": {
+          "timeRange": { "enum": ["today", "7d", "30d", "custom"] },
+          "dimension": { "const": "defect_type" }
+        },
+        "required": ["dimension"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "metric": { "const": "WipAgingDistribution" } },
+        "required": ["metric"]
+      },
+      "then": {
+        "properties": {
+          "timeRange": { "enum": ["today", "7d", "30d", "90d", "custom"] },
+          "dimension": { "const": "aging_bucket" }
+        },
+        "required": ["dimension"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "metric": { "const": "LotStatusDistribution" } },
+        "required": ["metric"]
+      },
+      "then": {
+        "properties": {
+          "timeRange": { "enum": ["today", "7d", "30d", "90d", "custom"] },
+          "dimension": { "const": "lot_status" }
+        },
+        "required": ["dimension"]
+      }
+    }
+  ],
+  "$defs": {
+    "OrderByV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "direction"],
+      "properties": {
+        "field": { "type": "string" },
+        "direction": { "type": "string", "enum": ["asc", "desc"] }
+      }
+    },
+    "FilterMOMV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "op", "value"],
+      "properties": {
+        "field": { "type": "string" },
+        "op": { "type": "string", "enum": ["=", "!=", "in", ">", ">=", "<", "<=", "between", "contains"] },
+        "value": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" },
+            { "type": "array" }
+          ]
+        }
+      }
+    }
+  }
+}

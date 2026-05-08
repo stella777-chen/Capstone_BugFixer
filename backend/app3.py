@@ -32,8 +32,8 @@ def load_schema(filename: str) -> Dict[str, Any]:
 
 
 # ===== Load MOM-only schemas =====
-UI_SCHEMA = load_schema("ui-config-v3.json")
-QUERY_SCHEMA = load_schema("query-mom-v1.json")
+UI_SCHEMA = load_schema("ui-config-v4.json")
+QUERY_SCHEMA = load_schema("query-api-v1.json")
 
 # Register local schemas so $ref won't try to fetch from network
 registry = Registry().with_resources(
@@ -114,7 +114,10 @@ def build_record_date_filter(time_range: str, table: str, start: str | None, end
 
 def fetch_scrap_rate(time_range: str, start: str | None, end: str | None) -> Dict[str, Any]:
     filter_map = {"7d": "7days", "30d": "30days", "90d": "90days"}
-    filter_type = filter_map.get(time_range)
+    if time_range == "custom":
+        filter_type = "30days"
+    else:
+        filter_type = filter_map.get(time_range)
     if filter_type is None:
         raise ValueError("ScrapRate only supports 7d, 30d, 90d, or custom.")
 
@@ -392,73 +395,141 @@ def run_query(query: Dict[str, Any]):
 # Generate UI (LLM-generated)
 # =========================
 def call_llm_generate_ui(prompt: str) -> Dict[str, Any]:
+    # LLM prompt for generating modern dashboard UI config.
     SYSTEM_PROMPT = """
+PROMPT VERSION: MODERN_UI_COMPONENTS_V2
+
 You are a backend JSON generator for a Manufacturing MOM dashboard system.
 
 Your task:
-Convert the user's natural language request into a valid UIConfigV3 JSON object.
-
-UI COMPLETENESS RULES:
-- Every query in top-level "queries" MUST be referenced by at least one UI component in "children".
-- Do NOT include unused queries.
-COMPONENT MAPPING RULE (CRITICAL):
-
-There are only two response shapes:
-- KPI shape → data.value
-- Distribution/Table shape → data.rows
-
-Use components strictly as follows:
-
-1) KPI metrics:
-   YieldRate, ScrapRate, ReworkRate
-   → Use CantierDashBoardCard
-   → Use path = "data.value"
-
-2) Distribution metrics:
-   DefectDistribution,
-   WipAgingDistribution,
-   LotStatusDistribution
-   → Use CantierDataGrid
-   → Use dataPath = "data.rows"
-   → NEVER use data.value for these metrics
-   → you MUST include a non-empty "columns" array.
-for CantierDataGrid,each column MUST be { "header": "...", "key": "...", "type": "text|number|date|datetime|enum" },
-NEVER use "field" or "headerName"
-
-Every query MUST be used by at least one component.
-Do NOT include unused queries.
-
-SORTING RULE:
-If sorting is requested, "orderBy" MUST be an array of objects:
-"orderBy": [ { "field": "<response field>", "direction": "asc|desc" } ]
-Do NOT use strings like "defectCount desc".
+Convert the user's natural language request into one valid UIConfig JSON object.
+Return only JSON. The JSON will be validated by a strict schema.
 
 OUTPUT RULES:
-- Output STRICTLY valid JSON.
+- Output strictly valid JSON.
 - No explanations.
 - No markdown.
 - Do not wrap JSON in code blocks.
-- Only output raw JSON.
+- Do not include comments.
+- Do not include unknown fields.
 
-========================
-TOP LEVEL STRUCTURE
-========================
+TOP LEVEL STRUCTURE:
+- The top-level object MUST contain: type, title, queries, children.
+- type MUST be "MesPage".
+- queries MUST be an object keyed by meaningful query keys.
+- children MUST be an array of UI components.
+- Do NOT generate other top-level fields such as layout, widgets, or components.
 
-The top-level JSON MUST be an object with these fields:
-- type (must be "MesPage")
-- title (string)
-- queries (object)
-- children (array)
+QUERY CONTRACT:
+Each object inside "queries" MUST use only these fields:
+- metric (required)
+- timeRange (required)
+- dimension (optional, only when allowed or required below)
+- start (required only when timeRange is "custom")
+- end (required only when timeRange is "custom")
+- filters, limit, page, pageSize, and orderBy are schema-supported but currently not applied by the backend query functions. Do not generate them unless the user explicitly asks and understands the backend may ignore them.
 
-Do NOT generate any other top-level fields (e.g., layout, widgets, components).
+Do NOT generate these fields inside any query:
+- query
+- params
+- type
+- sql
+- dataset
+- time
+- unknown fields
 
-========================
-MINIMAL EXAMPLE (VALID)
-========================
+Allowed metric values:
+- YieldRate
+- ScrapRate
+- ReworkRate
+- DefectDistribution
+- WipAgingDistribution
+- LotStatusDistribution
 
+Allowed timeRange values:
+- today
+- 7d
+- 30d
+- 90d
+- custom
+
+Time range rules:
+- If timeRange is "custom", include both start and end as ISO date-time strings, for example "2026-05-01T00:00:00Z".
+- If timeRange is not "custom", do not include start or end.
+
+Dimension rules:
+- DefectDistribution MUST use dimension = "defect_type".
+- WipAgingDistribution MUST use dimension = "aging_bucket".
+- LotStatusDistribution MUST use dimension = "lot_status".
+- YieldRate may use dimension = "line" or "date" when the user asks for a trend or grouping.
+- ScrapRate and ReworkRate should not include dimension unless the user explicitly asks for grouped data.
+
+Optional query controls:
+- Prefer not to generate filters, limit, page, pageSize, or orderBy.
+- Backend query functions currently apply metric-specific default filtering and sorting.
+- If the user explicitly asks for orderBy, it MUST be an array of objects, never a string.
+- If the user explicitly asks for pagination, use either limit OR both page and pageSize.
+- Never use limit together with page or pageSize.
+
+BACKEND RESPONSE DATA SHAPES:
+- ScrapRate returns data.value and data.wipCount.
+- ReworkRate returns data.value and data.wip.
+- YieldRate without dimension returns data.value.
+- YieldRate with dimension returns data.rows.
+- DefectDistribution returns data.rows.
+- WipAgingDistribution returns data.rows.
+- LotStatusDistribution returns data.rows.
+
+REFERENCE RULES:
+- Every child component must reference at least one existing queryKey.
+- Every query must be referenced by at least one child component.
+- Do not include unused queries.
+- Do not reference a queryKey that is not defined.
+
+MODERN COMPONENT TYPES:
+Use only these modern component type values:
+- ScrapRateDonut
+- ReworkRateDonut
+- LineChart
+- PieChart
+- BarChart
+- ComboChart
+- DataTable
+
+Do NOT use DataTable unless QueryAPIV1 adds a production status metric later.
+
+Metric-to-component mapping:
+- ScrapRate -> ScrapRateDonut.
+- ReworkRate -> ReworkRateDonut.
+- YieldRate with dimension "line" or "date" -> LineChart.
+- LotStatusDistribution -> PieChart.
+- WipAgingDistribution -> BarChart.
+- DefectDistribution -> ComboChart.
+
+Value bindings:
+- ScrapRateDonut.rate = { "queryKey": "...", "path": "data.value", "fallback": 0 }
+- ScrapRateDonut.count = { "queryKey": "...", "path": "data.wipCount", "fallback": 0 }
+- ReworkRateDonut.rate = { "queryKey": "...", "path": "data.value", "fallback": 0 }
+- ReworkRateDonut.count = { "queryKey": "...", "path": "data.wip", "fallback": 0 }
+- Chart data refs must use path = "data.rows".
+
+Chart field bindings:
+- PieChart.chartData uses queryKey, path, labelField, valueField, optional colorField.
+- BarChart.chartData uses queryKey, path, nameField, valueField.
+- LineChart.chartData uses queryKey, path, nameField, yieldField.
+- ComboChart.chartData uses queryKey, path, nameField, barField, lineField.
+
+Known response fields:
+- LotStatusDistribution rows: status, lotCount.
+- WipAgingDistribution rows: agingBucket, lotCount.
+- DefectDistribution rows: defectCode, defectCount, totalDefectPercentage.
+- YieldRate rows grouped by line: line, yield.
+- YieldRate rows grouped by date: date, yield.
+
+VALID EXAMPLE - ScrapRateDonut:
 {
   "type": "MesPage",
-  "title": "Example Dashboard",
+  "title": "Scrap Rate Dashboard",
   "queries": {
     "q_scrap": {
       "metric": "ScrapRate",
@@ -467,104 +538,75 @@ MINIMAL EXAMPLE (VALID)
   },
   "children": [
     {
-      "type": "CantierDashBoardCard",
-      "dashboardItems": [
-        {
-          "label": "Scrap Rate",
-          "amount": {
-            "queryKey": "q_scrap",
-            "path": "data.value",
-            "fallback": 0
-          },
-          "colorCode": "red",
-          "iconName": "Warning"
-        }
-      ]
+      "type": "ScrapRateDonut",
+      "headerText": "Scrap Rate",
+      "description": "Scrap rate and affected WIP count",
+      "rate": { "queryKey": "q_scrap", "path": "data.value", "fallback": 0 },
+      "count": { "queryKey": "q_scrap", "path": "data.wipCount", "fallback": 0 },
+      "totalValue": 100,
+      "filledColor": "#D32F2F",
+      "backgroundColor": "#D3D3D3",
+      "legendNames": ["Scrap Rate", "WIP Count"]
     }
   ]
 }
 
-Follow this structure exactly.
+VALID EXAMPLE - PieChart:
+{
+  "type": "MesPage",
+  "title": "Lot Status Dashboard",
+  "queries": {
+    "q_lot_status": {
+      "metric": "LotStatusDistribution",
+      "timeRange": "today",
+      "dimension": "lot_status"
+    }
+  },
+  "children": [
+    {
+      "type": "PieChart",
+      "headerText": "Lot Status",
+      "description": "Lot count by current status",
+      "pieFallbackColor": "#62abf5",
+      "chartData": {
+        "queryKey": "q_lot_status",
+        "path": "data.rows",
+        "labelField": "status",
+        "valueField": "lotCount"
+      }
+    }
+  ]
+}
 
-========================================
-QUERY CONTRACT (VERY IMPORTANT)
-========================================
-
-Each object inside "queries" MUST follow QueryMOMV1 and use ONLY these fields:
-- metric (required)
-- timeRange (required)
-- dimension (optional, only when allowed/required)
-- start (required only when timeRange="custom", format YYYY-MM-DD)
-- end (required only when timeRange="custom", format YYYY-MM-DD)
-- filters (optional)
-- limit OR (page + pageSize) (optional)
-- orderBy (optional)
-
-DO NOT generate these fields inside any query:
-- query
-- params
-- type
-- sql
-- any unknown fields
-
-========================================
-ALLOWED METRIC VALUES
-========================================
-
-YieldRate
-ScrapRate
-ReworkRate
-DefectDistribution
-WipAgingDistribution
-LotStatusDistribution
-
-========================================
-TIME RANGE RULES
-========================================
-
-Allowed timeRange values:
-today
-7d
-30d
-90d
-custom
-
-If timeRange = "custom":
-- MUST include start and end
-- start/end format: YYYY-MM-DD
-
-If timeRange != "custom":
-- MUST NOT include start or end
-
-========================================
-DIMENSION RULES (CRITICAL)
-========================================
-
-If metric = "DefectDistribution":
-- dimension MUST be "defect_type"
-
-If metric = "WipAgingDistribution":
-- dimension MUST be "aging_bucket"
-
-If metric = "LotStatusDistribution":
-- dimension MUST be "lot_status"
-
-If metric in ["YieldRate", "ScrapRate", "ReworkRate"]:
-- dimension is OPTIONAL
-- If present, it MUST be either "line" or "date"
-- Do not use any other dimension values for these metrics
-
-========================================
-UI CONSISTENCY RULES
-========================================
-
-- Every UI component must reference an existing queryKey in top-level "queries".
-- Do not reference a queryKey that is not defined.
-- Use meaningful query keys (e.g., q_yield, q_scrap, q_defects).
-
-REMEMBER:
-This is NOT a SQL system and NOT a GraphQL system.
-It is a semantic metric query contract system.
+VALID EXAMPLE - ComboChart:
+{
+  "type": "MesPage",
+  "title": "Defect Distribution",
+  "queries": {
+    "q_defects": {
+      "metric": "DefectDistribution",
+      "timeRange": "7d",
+      "dimension": "defect_type"
+    }
+  },
+  "children": [
+    {
+      "type": "ComboChart",
+      "headerText": "Defects",
+      "description": "Defect count and percentage by defect type",
+      "barColor": "#62abf5",
+      "lineColor": "#0078D4",
+      "lineTotalValue": 100,
+      "chartData": {
+        "queryKey": "q_defects",
+        "path": "data.rows",
+        "nameField": "defectCode",
+        "barField": "defectCount",
+        "lineField": "totalDefectPercentage"
+      }
+    }
+  ]
+}
 """
 
     response = deepseek_client.chat.completions.create(

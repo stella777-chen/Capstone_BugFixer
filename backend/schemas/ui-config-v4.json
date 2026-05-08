@@ -1,22 +1,22 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://cantier.demo/schemas/ui-config-v3.json",
-  "title": "UIConfigV3",
+  "$id": "https://cantier.demo/schemas/ui-config-v4.json",
+  "title": "UIConfigV4",
   "type": "object",
   "additionalProperties": false,
   "required": ["type", "children", "queries"],
   "properties": {
     "type": { "const": "MesPage" },
     "title": { "type": "string" },
-
     "queries": {
       "type": "object",
       "minProperties": 1,
       "maxProperties": 12,
-      "additionalProperties": { "$ref": "https://cantier.demo/schemas/query-db-v1.json"},
-      "description": "Map of queryKey -> QueryMOMV1. Frontend executes these queries and injects results into components via ValueRefV1/queryKey and rows bindings."
+      "additionalProperties": {
+        "$ref": "https://cantier.demo/schemas/query-api-v1.json"
+      },
+      "description": "Map of queryKey -> QueryAPIV1. Frontend executes queries and injects values via queryKey/path bindings."
     },
-
     "children": {
       "type": "array",
       "minItems": 1,
@@ -24,14 +24,9 @@
       "items": { "$ref": "#/$defs/DashboardChild" }
     }
   },
-
   "$defs": {
     "DashboardChild": {
       "oneOf": [
-        { "$ref": "#/$defs/CantierDashBoardCard" },
-        { "$ref": "#/$defs/CantierSecondaryCard" },
-        { "$ref": "#/$defs/CantierDataGrid" },
-        { "$ref": "#/$defs/CantierHistogram" },
         { "$ref": "#/$defs/DataTableCard" },
         { "$ref": "#/$defs/PieChartCard" },
         { "$ref": "#/$defs/BarChartCard" },
@@ -49,38 +44,15 @@
       "properties": {
         "queryKey": {
           "type": "string",
-          "description": "Key of a query defined in top-level 'queries'"
+          "description": "Key of a query defined in top-level queries"
         },
         "path": {
           "type": "string",
-          "description": "Simple path into the query response. Examples: 'value', 'rows', 'summary.oee'.Frontend resolver default:path='value'"
+          "description": "Path into query response, e.g. data.value"
         },
         "fallback": {
           "type": ["string", "number", "null"],
-          "description": "Optional fallback if value missing"
-        }
-      }
-    },
-
-    "RowsRefV1": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["queryKey"],
-      "properties": {
-        "queryKey": {
-          "type": "string",
-          "description": "Key of a query defined in top-level 'queries'"
-        },
-        "path": {
-          "type": "string",
-          "description": "Path to an array in query response. Frontend resolver default: path='data.rows'"
-        },
-        "fallback": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          },
-          "description": "Optional fallback rows when query path is missing"
+          "description": "Fallback if value is missing"
         }
       }
     },
@@ -143,7 +115,10 @@
       "required": ["queryKey", "labelField", "valueField"],
       "properties": {
         "queryKey": { "type": "string" },
-        "path": { "type": "string", "description": "Default path: data.rows" },
+        "path": {
+          "type": "string",
+          "description": "Path to rows array, default expected data.rows"
+        },
         "labelField": { "type": "string" },
         "valueField": { "type": "string" },
         "colorField": { "type": "string" }
@@ -187,7 +162,10 @@
       "required": ["queryKey", "nameField", "valueField"],
       "properties": {
         "queryKey": { "type": "string" },
-        "path": { "type": "string", "description": "Default path: data.rows" },
+        "path": {
+          "type": "string",
+          "description": "Path to rows array, default expected data.rows"
+        },
         "nameField": { "type": "string" },
         "valueField": { "type": "string" }
       }
@@ -231,7 +209,10 @@
       "required": ["queryKey", "nameField", "yieldField"],
       "properties": {
         "queryKey": { "type": "string" },
-        "path": { "type": "string", "description": "Default path: data.rows" },
+        "path": {
+          "type": "string",
+          "description": "Path to rows array, default expected data.rows"
+        },
         "nameField": { "type": "string" },
         "yieldField": { "type": "string" }
       }
@@ -276,7 +257,10 @@
       "required": ["queryKey", "nameField", "barField", "lineField"],
       "properties": {
         "queryKey": { "type": "string" },
-        "path": { "type": "string", "description": "Default path: data.rows" },
+        "path": {
+          "type": "string",
+          "description": "Path to rows array, default expected data.rows"
+        },
         "nameField": { "type": "string" },
         "barField": { "type": "string" },
         "lineField": { "type": "string" }
@@ -365,176 +349,6 @@
           }
         }
       ]
-    },
-
-    "CantierDashBoardCard": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["type", "dashboardItems"],
-      "properties": {
-        "type": { "const": "CantierDashBoardCard" },
-
-        "hasIcon": {
-          "type": "boolean",
-          "default": true
-        },
-
-        "hasOption": {
-          "type": "boolean",
-          "default": true
-        },
-
-        "dashboardItems": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 8,
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["label", "amount", "colorCode"],
-            "properties": {
-              "label": {
-                "type": "string",
-                "description": "KPI name displayed on the card"
-              },
-              "amount": {
-                "description": "KPI value OR a reference to query result via ValueRefV1",
-                "oneOf": [
-                  { "type": ["string", "number"] },
-                  { "$ref": "#/$defs/ValueRefV1" }
-                ]
-              },
-              "colorCode": {
-                "type": "string",
-                "enum": ["red", "blue", "green", "orange"]
-              },
-              "iconName": {
-                "type": "string",
-                "description": "Frontend maps iconName to actual React icon"
-              }
-            }
-          }
-        }
-      }
-    },
-
-    "CantierSecondaryCard": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["type", "title", "subtitle", "value", "colorCode"],
-      "properties": {
-        "type": { "const": "CantierSecondaryCard" },
-
-        "title": { "type": "string", "minLength": 1 },
-        "subtitle": { "type": "string", "minLength": 0 },
-
-        "value": {
-          "description": "Card value OR a reference to query result via ValueRefV1",
-          "oneOf": [
-            { "type": ["string", "number"] },
-            { "$ref": "#/$defs/ValueRefV1" }
-          ]
-        },
-
-        "colorCode": {
-          "type": "string",
-          "enum": ["red", "blue", "green", "orange"],
-          "default": "red"
-        },
-
-        "className": { "type": "string" },
-
-        "iconName": {
-          "type": "string",
-          "description": "Frontend maps iconName to an actual ReactNode icon"
-        }
-      }
-    },
-
-    "CantierDataGrid": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["type", "queryKey", "columns"],
-      "properties": {
-        "type": { "const": "CantierDataGrid" },
-
-        "id": { "type": "string" },
-
-        "title": { "type": "string" },
-
-        "queryKey": {
-          "type": "string",
-          "description": "Which query in top-level 'queries' supplies data for this grid"
-        },
-
-        "dataPath": {
-          "type": "string",
-          "description": "Path within that query's response that points to an array of rows. Example: 'rows'.Frontend resolver default:path='rows'"
-        },
-
-        "columns": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 30,
-          "items": { "$ref": "#/$defs/GridColumnV1" }
-        }
-      }
-    },
-
-    "GridColumnV1": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["header", "key"],
-      "properties": {
-        "header": { "type": "string" },
-        "key": {
-          "type": "string",
-          "description": "Field name in each row object"
-        },
-        "type": {
-          "type": "string",
-          "enum": ["text", "number", "date", "datetime", "enum"],
-          "default": "text"
-        }
-      }
-    },
-
-      "ChartDataRefV1": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["queryKey", "path", "xField", "yField"],
-        "properties": {
-          "queryKey": {
-            "type": "string",
-            "description": "Key of a query defined in top-level queries"
-          },
-          "path": {
-            "type": "string",
-            "description": "Path to the array data in the query response, e.g. 'rows' or 'data.rows'"
-          },
-          "xField": {
-            "type": "string",
-            "description": "Field in each row used for the x-axis"
-          },
-          "yField": {
-            "type": "string",
-            "description": "Field in each row used for the y-axis"
-          }
-        }
-      },
-
-    "CantierHistogram": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["type", "title", "dataRef"],
-      "properties": {
-        "type": { "const": "CantierHistogram" },
-        "title": { "type": "string" },
-        "subtitle": { "type": "string" },
-        "dataRef": { "$ref": "#/$defs/ChartDataRefV1" },
-        "xAxisLabel": { "type": "string" },
-        "yAxisLabel": { "type": "string" }
-      }
     }
   }
 }
