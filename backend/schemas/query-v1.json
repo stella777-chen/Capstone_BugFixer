@@ -8,11 +8,18 @@
   "properties": {
     "metric": {
       "type": "string",
-      "enum": ["OEE", "Availability", "Performance", "Quality", "DowntimeMinutes", "OutputQty"]
+      "enum": [
+        "ScrapRate",
+        "ReworkRate",
+        "YieldRate",
+        "DefectDistribution",
+        "WipAgingDistribution",
+        "LotStatusDistribution"
+      ]
     },
     "timeRange": {
       "type": "string",
-      "enum": ["24h", "7d", "30d", "custom"]
+      "enum": ["today", "7d", "30d", "90d", "custom"]
     },
     "start": {
       "type": "string",
@@ -26,7 +33,7 @@
     },
     "dimension": {
       "type": "string",
-      "enum": ["line", "machine", "shift", "product", "reason"]
+      "enum": ["line", "defect_type", "aging_bucket", "lot_status", "date"]
     },
     "filters": {
       "type": "array",
@@ -68,11 +75,11 @@
       "properties": {
         "field": {
           "type": "string",
-          "enum": ["line", "machine", "shift", "product", "reason"]
+          "enum": ["line", "defect_type", "aging_bucket", "lot_status", "date"]
         },
         "op": {
           "type": "string",
-          "enum": ["=", "!=", "in", "contains", ">=", "<="]
+          "enum": ["=", "!=", "in", ">=", "<="]
         },
         "value": {
           "type": ["string", "number", "boolean", "array"]

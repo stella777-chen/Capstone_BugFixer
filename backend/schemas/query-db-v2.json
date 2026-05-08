@@ -1,0 +1,683 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cantier.demo/schemas/query-db-v2.json",
+  "title": "QueryDBV2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["dataset", "time"],
+  "properties": {
+    "dataset": {
+      "type": "string",
+      "enum": [
+        "wip_production_status",
+        "wip_lot_status",
+        "wip_scrap_rate",
+        "wip_defect_rate",
+        "wip_aging_bucket",
+        "wip_rework_rate",
+        "wip_yield_summary"
+      ]
+    },
+    "queryMode": {
+      "type": "string",
+      "enum": ["raw", "aggregate"],
+      "default": "aggregate"
+    },
+    "time": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": { "type": "string", "enum": ["relative", "absolute"] },
+        "range": { "type": "string", "enum": ["today", "7d", "30d", "90d", "week", "month"] },
+        "start": { "type": "string", "format": "date" },
+        "end": { "type": "string", "format": "date" },
+        "dateField": { "type": "string", "default": "record_date" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "mode": { "const": "relative" } },
+            "required": ["mode"]
+          },
+          "then": { "required": ["range"] }
+        },
+        {
+          "if": {
+            "properties": { "mode": { "const": "absolute" } },
+            "required": ["mode"]
+          },
+          "then": { "required": ["start", "end"] }
+        }
+      ]
+    },
+    "select": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "uniqueItems": true,
+      "items": { "type": "string" }
+    },
+    "filters": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/Filter" }
+    },
+    "groupBy": {
+      "type": "array",
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": { "type": "string" }
+    },
+    "measures": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": { "$ref": "#/$defs/Measure" }
+    },
+    "sort": {
+      "type": "array",
+      "maxItems": 3,
+      "items": { "$ref": "#/$defs/SortItem" }
+    },
+    "limit": { "type": "integer", "minimum": 1, "maximum": 500 },
+    "page": { "type": "integer", "minimum": 0 },
+    "pageSize": { "type": "integer", "minimum": 1, "maximum": 200 }
+  },
+  "allOf": [
+    { "if": { "required": ["page"] }, "then": { "required": ["pageSize"] } },
+    { "if": { "required": ["pageSize"] }, "then": { "required": ["page"] } },
+    { "not": { "required": ["limit", "page"] } },
+
+    {
+      "if": {
+        "properties": { "queryMode": { "const": "raw" } },
+        "required": ["queryMode"]
+      },
+      "then": {
+        "required": ["select"],
+        "not": { "required": ["measures"] }
+      }
+    },
+    {
+      "if": {
+        "anyOf": [
+          {
+            "properties": { "queryMode": { "const": "aggregate" } },
+            "required": ["queryMode"]
+          },
+          { "not": { "required": ["queryMode"] } }
+        ]
+      },
+      "then": { "required": ["measures"] }
+    },
+
+    {
+      "if": {
+        "properties": { "dataset": { "const": "wip_production_status" } },
+        "required": ["dataset"]
+      },
+      "then": { "$ref": "#/$defs/Dataset_wip_production_status" }
+    },
+    {
+      "if": {
+        "properties": { "dataset": { "const": "wip_lot_status" } },
+        "required": ["dataset"]
+      },
+      "then": { "$ref": "#/$defs/Dataset_wip_lot_status" }
+    },
+    {
+      "if": {
+        "properties": { "dataset": { "const": "wip_scrap_rate" } },
+        "required": ["dataset"]
+      },
+      "then": { "$ref": "#/$defs/Dataset_wip_scrap_rate" }
+    },
+    {
+      "if": {
+        "properties": { "dataset": { "const": "wip_defect_rate" } },
+        "required": ["dataset"]
+      },
+      "then": { "$ref": "#/$defs/Dataset_wip_defect_rate" }
+    },
+    {
+      "if": {
+        "properties": { "dataset": { "const": "wip_aging_bucket" } },
+        "required": ["dataset"]
+      },
+      "then": { "$ref": "#/$defs/Dataset_wip_aging_bucket" }
+    },
+    {
+      "if": {
+        "properties": { "dataset": { "const": "wip_rework_rate" } },
+        "required": ["dataset"]
+      },
+      "then": { "$ref": "#/$defs/Dataset_wip_rework_rate" }
+    },
+    {
+      "if": {
+        "properties": { "dataset": { "const": "wip_yield_summary" } },
+        "required": ["dataset"]
+      },
+      "then": { "$ref": "#/$defs/Dataset_wip_yield_summary" }
+    }
+  ],
+  "$defs": {
+    "Filter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "op", "value"],
+      "properties": {
+        "field": { "type": "string" },
+        "op": {
+          "type": "string",
+          "enum": ["=", "!=", "in", ">", ">=", "<", "<=", "between", "contains"]
+        },
+        "value": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  { "type": "string" },
+                  { "type": "number" },
+                  { "type": "boolean" }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "op": { "const": "between" } },
+            "required": ["op"]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "field": { "const": "record_date" } },
+            "required": ["field"]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "oneOf": [
+                  { "type": "string", "format": "date" },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 2,
+                    "items": { "type": "string", "format": "date" }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Measure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "agg", "as"],
+      "properties": {
+        "field": { "type": "string" },
+        "agg": {
+          "type": "string",
+          "enum": ["sum", "avg", "min", "max", "count", "countDistinct"]
+        },
+        "as": { "type": "string", "minLength": 1 }
+      }
+    },
+    "SortItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "dir"],
+      "properties": {
+        "field": { "type": "string" },
+        "dir": { "type": "string", "enum": ["asc", "desc"] }
+      }
+    },
+
+    "Dataset_wip_production_status": {
+      "allOf": [
+        {
+          "properties": {
+            "select": {
+              "items": {
+                "enum": [
+                  "record_date",
+                  "pending_count",
+                  "in_process_count",
+                  "hold_count",
+                  "cancelled_count",
+                  "created_at"
+                ]
+              }
+            },
+            "groupBy": {
+              "items": { "enum": ["record_date", "created_at"] }
+            },
+            "measures": {
+              "items": {
+                "properties": {
+                  "field": {
+                    "enum": [
+                      "pending_count",
+                      "in_process_count",
+                      "hold_count",
+                      "cancelled_count"
+                    ]
+                  },
+                  "agg": { "enum": ["sum", "avg", "min", "max", "count"] }
+                }
+              }
+            },
+            "filters": {
+              "items": {
+                "properties": {
+                  "field": {
+                    "enum": [
+                      "record_date",
+                      "created_at",
+                      "pending_count",
+                      "in_process_count",
+                      "hold_count",
+                      "cancelled_count"
+                    ]
+                  }
+                }
+              }
+            },
+            "sort": {
+              "items": {
+                "properties": {
+                  "field": {
+                    "enum": [
+                      "record_date",
+                      "created_at",
+                      "pending_count",
+                      "in_process_count",
+                      "hold_count",
+                      "cancelled_count"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    "Dataset_wip_lot_status": {
+      "allOf": [
+        {
+          "properties": {
+            "time": {
+              "properties": {
+                "range": { "enum": ["today", "7d", "30d", "90d", "week", "month"] }
+              }
+            },
+            "select": {
+              "items": {
+                "enum": [
+                  "filter_type",
+                  "record_date",
+                  "date",
+                  "week_start_date",
+                  "month_start_date",
+                  "status",
+                  "lot_count"
+                ]
+              }
+            },
+            "groupBy": {
+              "items": {
+                "enum": [
+                  "filter_type",
+                  "record_date",
+                  "date",
+                  "week_start_date",
+                  "month_start_date",
+                  "status"
+                ]
+              }
+            },
+            "measures": {
+              "items": {
+                "properties": {
+                  "field": { "enum": ["lot_count"] },
+                  "agg": { "enum": ["sum", "avg", "min", "max", "count"] }
+                }
+              }
+            },
+            "filters": {
+              "items": {
+                "properties": {
+                  "field": {
+                    "enum": [
+                      "filter_type",
+                      "record_date",
+                      "date",
+                      "week_start_date",
+                      "month_start_date",
+                      "status",
+                      "lot_count"
+                    ]
+                  }
+                }
+              }
+            },
+            "sort": {
+              "items": {
+                "properties": {
+                  "field": {
+                    "enum": [
+                      "filter_type",
+                      "record_date",
+                      "date",
+                      "week_start_date",
+                      "month_start_date",
+                      "status",
+                      "lot_count"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    "Dataset_wip_scrap_rate": {
+      "allOf": [
+        {
+          "properties": {
+            "time": {
+              "properties": {
+                "range": { "enum": ["today", "7d", "30d", "90d"] }
+              }
+            },
+            "select": {
+              "items": { "enum": ["filter_type", "record_date", "scrap", "wip_count"] }
+            },
+            "groupBy": {
+              "items": { "enum": ["filter_type", "record_date"] }
+            },
+            "measures": {
+              "items": {
+                "properties": {
+                  "field": { "enum": ["scrap", "wip_count"] },
+                  "agg": { "enum": ["sum", "avg", "min", "max", "count"] }
+                }
+              }
+            },
+            "filters": {
+              "items": {
+                "properties": {
+                  "field": { "enum": ["filter_type", "record_date", "scrap", "wip_count"] }
+                }
+              }
+            },
+            "sort": {
+              "items": {
+                "properties": {
+                  "field": { "enum": ["filter_type", "record_date", "scrap", "wip_count"] }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    "Dataset_wip_defect_rate": {
+      "allOf": [
+        {
+          "properties": {
+            "time": {
+              "properties": {
+                "range": { "enum": ["today", "7d", "30d"] }
+              }
+            },
+            "select": {
+              "items": {
+                "enum": [
+                  "filter_type",
+                  "record_date",
+                  "defect_code",
+                  "defect_count",
+                  "total_defect_percentage"
+                ]
+              }
+            },
+            "groupBy": {
+              "items": { "enum": ["filter_type", "record_date", "defect_code"] }
+            },
+            "measures": {
+              "items": {
+                "properties": {
+                  "field": { "enum": ["defect_count", "total_defect_percentage"] },
+                  "agg": { "enum": ["sum", "avg", "min", "max", "count"] }
+                }
+              }
+            },
+            "filters": {
+              "items": {
+                "properties": {
+                  "field": {
+                    "enum": [
+                      "filter_type",
+                      "record_date",
+                      "defect_code",
+                      "defect_count",
+                      "total_defect_percentage"
+                    ]
+                  }
+                }
+              }
+            },
+            "sort": {
+              "items": {
+                "properties": {
+                  "field": {
+                    "enum": [
+                      "filter_type",
+                      "record_date",
+                      "defect_code",
+                      "defect_count",
+                      "total_defect_percentage"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    "Dataset_wip_aging_bucket": {
+      "allOf": [
+        {
+          "properties": {
+            "select": {
+              "items": { "enum": ["filter_type", "record_date", "aging_bucket", "lot_count"] }
+            },
+            "groupBy": {
+              "items": { "enum": ["filter_type", "record_date", "aging_bucket"] }
+            },
+            "measures": {
+              "items": {
+                "properties": {
+                  "field": { "enum": ["lot_count"] },
+                  "agg": { "enum": ["sum", "avg", "min", "max", "count"] }
+                }
+              }
+            },
+            "filters": {
+              "items": {
+                "allOf": [
+                  {
+                    "properties": {
+                      "field": { "enum": ["filter_type", "record_date", "aging_bucket", "lot_count"] }
+                    }
+                  },
+                  {
+                    "if": {
+                      "properties": { "field": { "const": "filter_type" } },
+                      "required": ["field"]
+                    },
+                    "then": {
+                      "properties": {
+                        "value": { "enum": ["InProgress"] }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "sort": {
+              "items": {
+                "properties": {
+                  "field": { "enum": ["filter_type", "record_date", "aging_bucket", "lot_count"] }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    "Dataset_wip_rework_rate": {
+      "allOf": [
+        {
+          "properties": {
+            "time": {
+              "properties": {
+                "range": { "enum": ["today", "7d", "30d"] }
+              }
+            },
+            "select": {
+              "items": { "enum": ["filter_type", "record_date", "rework", "wip"] }
+            },
+            "groupBy": {
+              "items": { "enum": ["filter_type", "record_date"] }
+            },
+            "measures": {
+              "items": {
+                "properties": {
+                  "field": { "enum": ["rework", "wip"] },
+                  "agg": { "enum": ["sum", "avg", "min", "max", "count"] }
+                }
+              }
+            },
+            "filters": {
+              "items": {
+                "properties": {
+                  "field": { "enum": ["filter_type", "record_date", "rework", "wip"] }
+                }
+              }
+            },
+            "sort": {
+              "items": {
+                "properties": {
+                  "field": { "enum": ["filter_type", "record_date", "rework", "wip"] }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    "Dataset_wip_yield_summary": {
+      "allOf": [
+        {
+          "properties": {
+            "time": {
+              "properties": {
+                "range": { "enum": ["today", "week", "month"] }
+              }
+            },
+            "select": {
+              "items": {
+                "enum": [
+                  "filter_type",
+                  "record_date",
+                  "lot_action_type",
+                  "production_line_code",
+                  "total_yield"
+                ]
+              }
+            },
+            "groupBy": {
+              "items": {
+                "enum": [
+                  "filter_type",
+                  "record_date",
+                  "lot_action_type",
+                  "production_line_code"
+                ]
+              }
+            },
+            "measures": {
+              "items": {
+                "properties": {
+                  "field": { "enum": ["total_yield"] },
+                  "agg": { "enum": ["sum", "avg", "min", "max", "count"] }
+                }
+              }
+            },
+            "filters": {
+              "items": {
+                "properties": {
+                  "field": {
+                    "enum": [
+                      "filter_type",
+                      "record_date",
+                      "lot_action_type",
+                      "production_line_code",
+                      "total_yield"
+                    ]
+                  }
+                }
+              }
+            },
+            "sort": {
+              "items": {
+                "properties": {
+                  "field": {
+                    "enum": [
+                      "filter_type",
+                      "record_date",
+                      "lot_action_type",
+                      "production_line_code",
+                      "total_yield"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
