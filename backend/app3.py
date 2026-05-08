@@ -60,6 +60,241 @@ def validate_with(validator: Draft202012Validator, data: Any) -> Tuple[bool, Lis
     return False, [{"path": list(e.path), "message": e.message} for e in errors]
 
 
+try:
+    import mysql.connector
+    from mysql.connector import Error as MySQLError
+except ModuleNotFoundError:
+    mysql = None
+    MySQLError = Exception
+
+DB_CONFIG = {
+    "host": os.getenv("DB_HOST", "127.0.0.1"),
+    "port": int(os.getenv("DB_PORT", "3306")),
+    "user": os.getenv("DB_USER", "root"),
+    "password": os.getenv("DB_PASSWORD", ""),
+    "database": os.getenv("DB_NAME", "wip_dashboard"),
+}
+
+
+def get_db_connection():
+    if mysql is None:
+        raise RuntimeError("mysql-connector-python is not installed.")
+    return mysql.connector.connect(**DB_CONFIG)
+
+
+def parse_custom_date(value: str) -> str:
+    return value[:10]
+
+
+def build_record_date_filter(time_range: str, table: str, start: str | None, end: str | None) -> Tuple[str, List[Any]]:
+    if time_range == "today":
+        return f"record_date = (SELECT MAX(record_date) FROM {table})", []
+    if time_range == "7d":
+        return (
+            f"record_date BETWEEN (SELECT DATE_SUB(MAX(record_date), INTERVAL 6 DAY) FROM {table}) "
+            f"AND (SELECT MAX(record_date) FROM {table})",
+            [],
+        )
+    if time_range == "30d":
+        return (
+            f"record_date BETWEEN (SELECT DATE_SUB(MAX(record_date), INTERVAL 29 DAY) FROM {table}) "
+            f"AND (SELECT MAX(record_date) FROM {table})",
+            [],
+        )
+    if time_range == "90d":
+        return (
+            f"record_date BETWEEN (SELECT DATE_SUB(MAX(record_date), INTERVAL 89 DAY) FROM {table}) "
+            f"AND (SELECT MAX(record_date) FROM {table})",
+            [],
+        )
+    if time_range == "custom" and start and end:
+        return "record_date BETWEEN %s AND %s", [parse_custom_date(start), parse_custom_date(end)]
+    raise ValueError(f"Unsupported timeRange: {time_range}")
+
+
+def fetch_scrap_rate(time_range: str, start: str | None, end: str | None) -> Dict[str, Any]:
+    filter_map = {"7d": "7days", "30d": "30days", "90d": "90days"}
+    filter_type = filter_map.get(time_range)
+    if filter_type is None:
+        raise ValueError("ScrapRate only supports 7d, 30d, 90d, or custom.")
+
+    clause, params = build_record_date_filter(time_range, "wip_scrap_rate", start, end)
+    sql = f"""
+        SELECT scrap AS value, wip_count AS wipCount, record_date
+        FROM wip_scrap_rate
+        WHERE filter_type = %s AND {clause}
+        ORDER BY record_date DESC
+        LIMIT 1
+    """
+    with get_db_connection() as conn:
+        with conn.cursor(dictionary=True) as cursor:
+            cursor.execute(sql, [filter_type, *params])
+            row = cursor.fetchone()
+    if not row:
+        raise ValueError("No ScrapRate data found for the requested time range.")
+    row.pop("record_date", None)
+    return row
+
+
+def fetch_rework_rate(time_range: str, start: str | None, end: str | None) -> Dict[str, Any]:
+    filter_map = {"today": "today", "7d": "7days", "30d": "30days"}
+    if time_range == "custom":
+        filter_type = "30days"
+    else:
+        filter_type = filter_map.get(time_range)
+    if filter_type is None:
+        raise ValueError("ReworkRate only supports today, 7d, 30d, or custom.")
+
+    clause, params = build_record_date_filter(time_range, "wip_rework_rate", start, end)
+    sql = f"""
+        SELECT rework AS value, wip, record_date
+        FROM wip_rework_rate
+        WHERE filter_type = %s AND {clause}
+        ORDER BY record_date DESC
+        LIMIT 1
+    """
+    with get_db_connection() as conn:
+        with conn.cursor(dictionary=True) as cursor:
+            cursor.execute(sql, [filter_type, *params])
+            row = cursor.fetchone()
+    if not row:
+        raise ValueError("No ReworkRate data found for the requested time range.")
+    row.pop("record_date", None)
+    return row
+
+
+def fetch_wip_aging_distribution(time_range: str, start: str | None, end: str | None) -> List[Dict[str, Any]]:
+    clause, params = build_record_date_filter(time_range, "wip_aging_bucket", start, end)
+    sql = f"""
+        SELECT
+            aging_bucket AS agingBucket,
+            SUM(lot_count) AS lotCount
+        FROM wip_aging_bucket
+        WHERE filter_type = 'InProgress' AND {clause}
+        GROUP BY aging_bucket
+        ORDER BY CAST(SUBSTRING_INDEX(aging_bucket, '-', 1) AS UNSIGNED)
+    """
+    with get_db_connection() as conn:
+        with conn.cursor(dictionary=True) as cursor:
+            cursor.execute(sql, params)
+            rows = cursor.fetchall()
+    if not rows:
+        raise ValueError("No WipAgingDistribution data found for the requested time range.")
+    return rows
+
+
+def fetch_yield_rate(
+    time_range: str, dimension: str | None, start: str | None, end: str | None
+) -> Dict[str, Any] | List[Dict[str, Any]]:
+    filter_map = {"today": "today", "7d": "weeks", "30d": "months", "90d": "months"}
+    if time_range == "custom":
+        filter_type = "months"
+    else:
+        filter_type = filter_map.get(time_range)
+    if filter_type is None:
+        raise ValueError("YieldRate only supports today, 7d, 30d, 90d, or custom.")
+
+    clause, params = build_record_date_filter(time_range, "wip_yield_summary", start, end)
+
+    if dimension == "line":
+        sql = f"""
+            SELECT
+                production_line_code AS line,
+                ROUND(AVG(total_yield), 2) AS yield
+            FROM wip_yield_summary
+            WHERE filter_type = %s AND {clause}
+            GROUP BY production_line_code
+            ORDER BY production_line_code
+        """
+        query_params = [filter_type, *params]
+    elif dimension == "date":
+        sql = f"""
+            SELECT
+                CAST(record_date AS CHAR) AS date,
+                ROUND(AVG(total_yield), 2) AS yield
+            FROM wip_yield_summary
+            WHERE filter_type = %s AND {clause}
+            GROUP BY record_date
+            ORDER BY record_date
+        """
+        query_params = [filter_type, *params]
+    elif dimension is None:
+        sql = f"""
+            SELECT ROUND(AVG(total_yield), 2) AS value
+            FROM wip_yield_summary
+            WHERE filter_type = %s AND {clause}
+        """
+        query_params = [filter_type, *params]
+    else:
+        raise ValueError("YieldRate only supports dimension 'line' or 'date'.")
+
+    with get_db_connection() as conn:
+        with conn.cursor(dictionary=True) as cursor:
+            cursor.execute(sql, query_params)
+            if dimension in ("line", "date"):
+                rows = cursor.fetchall()
+                if not rows:
+                    raise ValueError("No YieldRate data found for the requested time range.")
+                return rows
+            row = cursor.fetchone()
+
+    if not row or row["value"] is None:
+        raise ValueError("No YieldRate data found for the requested time range.")
+    return row
+
+
+def fetch_defect_distribution(time_range: str, start: str | None, end: str | None) -> List[Dict[str, Any]]:
+    filter_map = {"today": "today", "7d": "7days", "30d": "30days"}
+    if time_range == "custom":
+        filter_type = "30days"
+    else:
+        filter_type = filter_map.get(time_range)
+    if filter_type is None:
+        raise ValueError("DefectDistribution only supports today, 7d, 30d, or custom.")
+
+    clause, params = build_record_date_filter(time_range, "wip_defect_rate", start, end)
+    sql = f"""
+        SELECT
+            defect_code AS defectCode,
+            SUM(defect_count) AS defectCount,
+            ROUND(AVG(total_defect_percentage), 2) AS totalDefectPercentage
+        FROM wip_defect_rate
+        WHERE filter_type = %s AND {clause}
+        GROUP BY defect_code
+        ORDER BY defectCount DESC, defectCode ASC
+    """
+    with get_db_connection() as conn:
+        with conn.cursor(dictionary=True) as cursor:
+            cursor.execute(sql, [filter_type, *params])
+            rows = cursor.fetchall()
+    if not rows:
+        raise ValueError("No DefectDistribution data found for the requested time range.")
+    return rows
+
+
+def fetch_lot_status_distribution(time_range: str, start: str | None, end: str | None) -> List[Dict[str, Any]]:
+    clause, params = build_record_date_filter(time_range, "wip_lot_status", start, end)
+    sql = f"""
+        SELECT
+            CAST(date AS CHAR) AS date,
+            CAST(week_start_date AS CHAR) AS weekStartDate,
+            CAST(month_start_date AS CHAR) AS monthStartDate,
+            status,
+            SUM(lot_count) AS lotCount
+        FROM wip_lot_status
+        WHERE filter_type = 'today' AND {clause}
+        GROUP BY date, week_start_date, month_start_date, status
+        ORDER BY date ASC, status ASC
+    """
+    with get_db_connection() as conn:
+        with conn.cursor(dictionary=True) as cursor:
+            cursor.execute(sql, params)
+            rows = cursor.fetchall()
+    if not rows:
+        raise ValueError("No LotStatusDistribution data found for the requested time range.")
+    return rows
+
+
 app = FastAPI(title="MOM Demo Backend (MOM-only)")
 
 app.add_middleware(
@@ -103,129 +338,54 @@ def run_query(query: Dict[str, Any]):
     metric = query["metric"]
     time_range = query["timeRange"]
     dimension = query.get("dimension")
+    start = query.get("start")
+    end = query.get("end")
 
-    # ---- KPI: ScrapRate ----
     if metric == "ScrapRate":
-        # Doc: scrap = (SUM(scrap_qty)/SUM(total_output))*100, wipCount = SUM(total_output)
-        # Mock numbers
-        return {
-            "ok": True,
-            "data": {
-                "value": 2.8,          # scrap %
-                "wipCount": 12840      # total_output within window
-            },
-            "meta": {"timeRange": time_range},
-        }
+        try:
+            data = fetch_scrap_rate(time_range, start, end)
+        except (RuntimeError, ValueError, MySQLError) as exc:
+            return {"ok": False, "errors": [str(exc)], "data": None}
+        return {"ok": True, "data": data, "meta": {"timeRange": time_range}}
 
-    # ---- KPI: ReworkRate ----
     if metric == "ReworkRate":
-        return {
-            "ok": True,
-            "data": {
-                "value": 3.6,      # rework %
-                "wip": 12840       # total_output within window
-            },
-            "meta": {"timeRange": time_range},
-        }
+        try:
+            data = fetch_rework_rate(time_range, start, end)
+        except (RuntimeError, ValueError, MySQLError) as exc:
+            return {"ok": False, "errors": [str(exc)], "data": None}
+        return {"ok": True, "data": data, "meta": {"timeRange": time_range}}
 
-    # ---- KPI: YieldRate ----
     if metric == "YieldRate":
-        # If grouped by line/date you can return rows; otherwise value.
+        try:
+            result = fetch_yield_rate(time_range, dimension, start, end)
+        except (RuntimeError, ValueError, MySQLError) as exc:
+            return {"ok": False, "errors": [str(exc)], "data": None}
         if dimension in ("line", "date"):
-            return {
-                "ok": True,
-                "data": {
-                    "rows": [
-                        {"line": "Line A", "yield": 93.2},
-                        {"line": "Line B", "yield": 91.8},
-                        {"line": "Line C", "yield": 94.1},
-                        {"line": "Line D", "yield": 95.0},
-                        {"line": "Line E", "yield": 92.4},
-                    ]
-                },
-                "meta": {"timeRange": time_range, "dimension": dimension},
-            }
-        return {
-            "ok": True,
-            "data": {"value": 93.6},
-            "meta": {"timeRange": time_range},
-        }
+            return {"ok": True, "data": {"rows": result}, "meta": {"timeRange": time_range, "dimension": dimension}}
+        return {"ok": True, "data": result, "meta": {"timeRange": time_range}}
 
-    # ---- Distribution: DefectDistribution ----
     if metric == "DefectDistribution":
-        # Doc contract: defectCode, defectCount, totalDefectPercentage
-        return {
-            "ok": True,
-            "data": {
-                "rows": [
-                    {"defectCode": "Scratch", "defectCount": 250, "totalDefectPercentage": 25.0},
-                    {"defectCode": "Crack", "defectCount": 200, "totalDefectPercentage": 20.0},
-                    {"defectCode": "Discolor", "defectCount": 150, "totalDefectPercentage": 15.0},
-                    {"defectCode": "Burr", "defectCount": 250, "totalDefectPercentage": 25.0},
-                    {"defectCode": "Warp", "defectCount": 150, "totalDefectPercentage": 15.0}
-                ]
-            },
-            "meta": {"timeRange": time_range, "dimension": "defect_type"},
-        }
+        try:
+            rows = fetch_defect_distribution(time_range, start, end)
+        except (RuntimeError, ValueError, MySQLError) as exc:
+            return {"ok": False, "errors": [str(exc)], "data": None}
+        return {"ok": True, "data": {"rows": rows}, "meta": {"timeRange": time_range, "dimension": "defect_type"}}
 
-    # ---- Distribution: WipAgingDistribution ----
     if metric == "WipAgingDistribution":
-        # Doc contract: agingBucket, lotCount
-        return {
-            "ok": True,
-            "data": {
-                "rows": [
-                    {"agingBucket": "1-3", "lotCount": 12},
-                    {"agingBucket": "4-7", "lotCount": 18},
-                    {"agingBucket": "8-11", "lotCount": 9},
-                    {"agingBucket": "12-15", "lotCount": 6},
-                    {"agingBucket": "16-19", "lotCount": 4},
-                    {"agingBucket": "20-23", "lotCount": 2},
-                    {"agingBucket": "24-27", "lotCount": 1}
-                ]
-            },
-            "meta": {"timeRange": time_range, "dimension": "aging_bucket"},
-        }
+        try:
+            rows = fetch_wip_aging_distribution(time_range, start, end)
+        except (RuntimeError, ValueError, MySQLError) as exc:
+            return {"ok": False, "errors": [str(exc)], "data": None}
+        return {"ok": True, "data": {"rows": rows}, "meta": {"timeRange": time_range, "dimension": "aging_bucket"}}
 
-    # ---- Distribution: LotStatusDistribution ----
     if metric == "LotStatusDistribution":
-        # Doc contract example: date/weekStartDate/monthStartDate/status/lotCount
-        return {
-            "ok": True,
-            "data": {
-                "rows": [
-                    {
-                        "date": "2026-02-28",
-                        "weekStartDate": "2026-02-23",
-                        "monthStartDate": "2026-02-01",
-                        "status": "NotStarted",
-                        "lotCount": 5
-                    },
-                    {
-                        "date": "2026-02-28",
-                        "weekStartDate": "2026-02-23",
-                        "monthStartDate": "2026-02-01",
-                        "status": "WIP",
-                        "lotCount": 11
-                    },
-                    {
-                        "date": "2026-02-28",
-                        "weekStartDate": "2026-02-23",
-                        "monthStartDate": "2026-02-01",
-                        "status": "Finished",
-                        "lotCount": 7
-                    }
-                ]
-            },
-            "meta": {"timeRange": time_range, "dimension": "lot_status"},
-        }
+        try:
+            rows = fetch_lot_status_distribution(time_range, start, end)
+        except (RuntimeError, ValueError, MySQLError) as exc:
+            return {"ok": False, "errors": [str(exc)], "data": None}
+        return {"ok": True, "data": {"rows": rows}, "meta": {"timeRange": time_range, "dimension": "lot_status"}}
 
-    # Default response
-    return {
-        "ok": True,
-        "data": {"value": None, "note": f"mock not implemented for {metric}"},
-        "meta": {"timeRange": time_range},
-    }
+    return {"ok": True, "data": {"note": f"mock not implemented for {metric}"}, "meta": {"timeRange": time_range}}
 
 
 # =========================
@@ -424,12 +584,24 @@ It is a semantic metric query contract system.
 
 @app.post("/generate-ui")
 def generate_ui(req: Dict[str, Any] = Body(...)):
-    prompt = req.get("prompt")
-    if not prompt:
+    # Get user input prompt (from frontend)
+    user_prompt = req.get("prompt")
+    if not user_prompt or not isinstance(user_prompt, str) or not user_prompt.strip():
         return {"ok": False, "errors": ["Prompt is required"]}
 
+    # Sanitize user input
+    user_prompt = user_prompt.strip()
+    
+    # Limit: 2000 char max for user input (from frontend) to prevent excessive API token waste
+    max_user_input_len = int(os.getenv("PROMPT_MAX_LENGTH", "2000"))
+    if len(user_prompt) > max_user_input_len:
+        return {
+            "ok": False, 
+            "errors": [f"User prompt too long (max {max_user_input_len} chars, got {len(user_prompt)})"]
+        }
+
     try:
-        ui_config = call_llm_generate_ui(prompt)
+        ui_config = call_llm_generate_ui(user_prompt)
     except Exception as e:
         return {"ok": False, "errors": [f"LLM error: {str(e)}"]}
 
@@ -439,139 +611,3 @@ def generate_ui(req: Dict[str, Any] = Body(...)):
         return {"ok": False, "errors": errors}
 
     return {"ok": True, "uiConfig": ui_config}
-
-# =========================
-# Generate UI (rule-based)
-# =========================
-
-# @app.post("/generate-ui")
-# def generate_ui(req: Dict[str, Any]):
-#     """
-#     req: { "prompt": "..." }
-#     Demo rule mapping -> outputs UIConfigV3 (MOM only)
-#     """
-#     prompt = (req.get("prompt") or "").lower()
-
-#     queries: Dict[str, Dict[str, Any]] = {}
-#     children: List[Dict[str, Any]] = []
-
-#     def put_query(key: str, metric: str, time_range: str = "7d", dimension: str | None = None) -> str:
-#         q: Dict[str, Any] = {"metric": metric, "timeRange": time_range}
-#         if dimension:
-#             q["dimension"] = dimension
-#         queries[key] = q
-#         return key
-
-#     dashboard_items: List[Dict[str, Any]] = []
-
-#     # Cards
-#     if "scrap" in prompt:
-#         qk = put_query("q_scrap", "ScrapRate", "30d")
-#         dashboard_items.append(
-#             {
-#                 "label": "Scrap Rate (%)",
-#                 "amount": {"queryKey": qk, "path": "data.value", "fallback": 0},
-#                 "colorCode": "red",
-#                 "iconName": "Warning",
-#             }
-#         )
-
-#     if "yield" in prompt:
-#         qk = put_query("q_yield", "YieldRate", "30d")
-#         dashboard_items.append(
-#             {
-#                 "label": "Yield Rate (%)",
-#                 "amount": {"queryKey": qk, "path": "data.value", "fallback": 0},
-#                 "colorCode": "green",
-#                 "iconName": "TrendUp",
-#             }
-#         )
-
-#     if "rework" in prompt:
-#         qk = put_query("q_rework", "ReworkRate", "30d")
-#         dashboard_items.append(
-#             {
-#                 "label": "Rework Rate (%)",
-#                 "amount": {"queryKey": qk, "path": "data.value", "fallback": 0},
-#                 "colorCode": "orange",
-#                 "iconName": "Tool",
-#             }
-#         )
-
-#     # Grids (distribution tables)
-#     if "defect" in prompt:
-#         qk = put_query("q_defects", "DefectDistribution", "30d", dimension="defect_type")
-#         children.append(
-#             {
-#                 "type": "CantierDataGrid",
-#                 "id": "defect-grid",
-#                 "title": "Defect Distribution",
-#                 "queryKey": qk,
-#                 "dataPath": "data.rows",
-#                 "columns": [
-#                     {"header": "Defect", "key": "defectCode", "type": "text"},
-#                     {"header": "Count", "key": "defectCount", "type": "number"},
-#                     {"header": "%", "key": "totalDefectPercentage", "type": "number"}
-#                 ],
-#             }
-#         )
-
-#     if "wip" in prompt and "aging" in prompt:
-#         qk = put_query("q_wip_aging", "WipAgingDistribution", "today", dimension="aging_bucket")
-#         children.append(
-#             {
-#                 "type": "CantierDataGrid",
-#                 "id": "wip-aging-grid",
-#                 "title": "WIP Aging",
-#                 "queryKey": qk,
-#                 "dataPath": "data.rows",
-#                 "columns": [
-#                     {"header": "Aging Bucket", "key": "agingBucket", "type": "text"},
-#                     {"header": "Lot Count", "key": "lotCount", "type": "number"}
-#                 ],
-#             }
-#         )
-
-#     if "lot" in prompt and "status" in prompt:
-#         qk = put_query("q_lot_status", "LotStatusDistribution", "7d", dimension="lot_status")
-#         children.append(
-#             {
-#                 "type": "CantierDataGrid",
-#                 "id": "lot-status-grid",
-#                 "title": "Lot Status",
-#                 "queryKey": qk,
-#                 "dataPath": "data.rows",
-#                 "columns": [
-#                     {"header": "Date", "key": "date", "type": "date"},
-#                     {"header": "Week Start", "key": "weekStartDate", "type": "date"},
-#                     {"header": "Month Start", "key": "monthStartDate", "type": "date"},
-#                     {"header": "Status", "key": "status", "type": "text"},
-#                     {"header": "Lot Count", "key": "lotCount", "type": "number"}
-#                 ],
-#             }
-#         )
-
-#     if not dashboard_items and not children:
-#         return {"ok": False, "errors": ["Unsupported request in demo"]}
-
-#     if dashboard_items:
-#         children.insert(
-#             0,
-#             {
-#                 "type": "CantierDashBoardCard",
-#                 "dashboardItems": dashboard_items,
-#             },
-#         )
-
-#     ui_config = {
-#         "type": "MesPage",
-#         "title": "MOM Test Dashboard",
-#         "queries": queries,
-#         "children": children,
-#     }
-
-#     ok, errors = validate_with(ui_validator, ui_config)
-#     if not ok:
-#         return {"ok": False, "errors": errors}
-
-#     return {"ok": True, "uiConfig": ui_config}
