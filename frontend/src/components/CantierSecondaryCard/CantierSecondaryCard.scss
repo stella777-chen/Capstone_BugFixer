@@ -2,6 +2,9 @@
     --fui-Card--size: 1.5vh;
     --fui-Card--border-radius: 0.2vw;
     gap: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
     .card_icon {
         color: var(--cardColor);
@@ -38,7 +41,7 @@
     .card_value {
         color: var(--cardColor);
         padding: 1.2vh 0.63vw;
-        margin: 0;
+        margin: auto 0 0;
         text-align: right;
         font-weight: bold;
         font-size: var(--font-xl);

@@ -1,7 +1,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";
-import { wipStore } from "src/store/store";
+import { wipStore } from "src/pages/AIQuery/components/WipDashboard/store/store";
 import { MesSnackbarProvider } from "src/components/MesSnackbarStacks";
 import { CantierSignalRProvider } from "src/components/CantierSignalR/CantierSignalRProvider";
 

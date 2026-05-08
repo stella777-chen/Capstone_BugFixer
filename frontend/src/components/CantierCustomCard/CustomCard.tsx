@@ -3,7 +3,6 @@ import {
   Card,
   CardHeader,
   Button,
-  Caption1,
   Text,
   TabList,
   Tab,
@@ -14,10 +13,10 @@ interface CustomCardProps {
   headerText: string;
   description: string;
   children: React.ReactNode;
-  tabItems: string[];
-  selectedTab: string;
+  tabItems?: string[];
+  selectedTab?: string;
   style?: React.CSSProperties;
-  onTabChange: (tabValue: string) => void;
+  onTabChange?: (tabValue: string) => void;
   className?: string;
   customHeaderClassName?: string;
   
@@ -68,21 +67,19 @@ const CustomCard: React.FC<CustomCardProps> = ({
           />
         }
       />
-    <TabList
-  selectedValue={selectedTab}
-  onTabSelect={(_, data) => onTabChange(data.value as string)}
-  className="custom-tablist"
->
-  {tabItems.map((tab) => (
-    <Tab
-      key={tab}
-      value={tab}
-      className="custom-tab"
-    >
-      {tab}
-    </Tab>
-  ))}
-</TabList>
+      {tabItems && tabItems.length > 1 && selectedTab && onTabChange && (
+        <TabList
+          selectedValue={selectedTab}
+          onTabSelect={(_, data) => onTabChange(data.value as string)}
+          className="custom-tablist"
+        >
+          {tabItems.map((tab) => (
+            <Tab key={tab} value={tab} className="custom-tab">
+              {tab}
+            </Tab>
+          ))}
+        </TabList>
+      )}
       {children}
     </Card>
   );

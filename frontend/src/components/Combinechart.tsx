@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { 
   ComposedChart, 
   Bar, 
@@ -16,35 +16,64 @@ interface CombinedChartProps {
     barValue: number;
     lineValue: number;
   }>;
-  width?: string;
-  height?: string;
+  barColor?: string;
+  lineColor?: string;
+  lineTotalValue?: number;
+  totalCount?: number;
 }
 
-const CombinedChart: React.FC<CombinedChartProps> = ({ data }) => {
+const aspectRatio = 2.5;
+const minHeight = 200;
+
+const CombinedChart: React.FC<CombinedChartProps> = ({
+  data,
+  barColor = "#62abf5",
+  lineColor = "#0078D4",
+  lineTotalValue = 100,
+  totalCount,
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(minHeight);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver(([entry]) => {
+      const width = entry.contentRect.width;
+      const containerHeight = entry.contentRect.height;
+      const nextHeight = Math.max(minHeight, width / aspectRatio, containerHeight);
+      setHeight((prev) => (Math.abs(prev - nextHeight) < 1 ? prev : nextHeight));
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const safeLineTotalValue = lineTotalValue > 0 ? lineTotalValue : 100;
+  const dataMaxBar = data.length ? Math.max(...data.map((item) => item.barValue), 0) : 0;
+  const safeLeftMax = Math.max(totalCount ?? dataMaxBar, 1);
+  const leftMid = Math.round(safeLeftMax / 2);
+  const chartData = data.map((item) => ({
+    ...item,
+    linePercentValue: (item.lineValue / safeLineTotalValue) * 100,
+  }));
+
   return (
-    <ResponsiveContainer width="100%" height={250}>
-      <ComposedChart
-        data={data}
-        margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-      >
+    <div ref={containerRef} style={{ width: "100%", height: "100%", minHeight }}>
+      <ResponsiveContainer width="100%" height={height}>
+        <ComposedChart data={chartData}>
         <XAxis
           dataKey="name"
           axisLine={false}
           tickLine={false}
           interval={0}
-          height={60}
-          tick={{ fontSize: 12 }}
-          padding={{ left: 10, right: 10 }}
         />
-        {/* Left Y-axis for count values (0-200) */}
+        {/* Left Y-axis follows provided totalCount; otherwise falls back to data max. */}
         <YAxis
           yAxisId="left"
           orientation="left"
           axisLine={false}
           tickLine={false}
-          tickMargin={8}
-          domain={[0, 200]}
-          ticks={[0, 100, 200]}
+          domain={[0, safeLeftMax]}
+          ticks={[0, leftMid, safeLeftMax]}
         />
         {/* Right Y-axis for percentage values (0-100%) */}
         <YAxis
@@ -52,7 +81,6 @@ const CombinedChart: React.FC<CombinedChartProps> = ({ data }) => {
           orientation="right"
           axisLine={false}
           tickLine={false}
-          tickMargin={8}
           domain={[0, 100]}
           ticks={[0, 50, 100]}
           tickFormatter={(value) => `${value}%`}
@@ -60,35 +88,36 @@ const CombinedChart: React.FC<CombinedChartProps> = ({ data }) => {
         <Tooltip 
           formatter={(value, name) => {
             if (name === "barValue") return [`${value}`, "Defect Count"];
-            if (name === "lineValue") return [`${value}%`, "Total Defect %"];
+            if (name === "linePercentValue") return [`${Number(value).toFixed(2)}%`, "Total Defect %"];
             return [value, name];
           }}
         />
         <Legend
           formatter={(value) =>
             value === "barValue" ? "Defect Count" :
-            value === "lineValue" ? "Total Defect %" : value
+            value === "linePercentValue" ? "Total Defect %" : value
           }
         />
         <Bar
           yAxisId="left"
           dataKey="barValue"
-          fill="#62abf5"
+          fill={barColor}
           radius={[5, 5, 0, 0]}
           name="barValue"
         />
         <Line
           yAxisId="right"
           type="monotone"
-          dataKey="lineValue"
-          stroke="#0078D4"
+          dataKey="linePercentValue"
+          stroke={lineColor}
           strokeWidth={2}
-          dot={{ r: 4, fill: '#0078D4' }}
+          dot={{ r: 4, fill: lineColor }}
           activeDot={{ r: 6 }}
-          name="lineValue"
+          name="linePercentValue"
         />
-      </ComposedChart>
-    </ResponsiveContainer>
+        </ComposedChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 

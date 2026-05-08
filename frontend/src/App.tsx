@@ -5,10 +5,8 @@ import "./assets/styles/inputForm.css";
 import "./assets/styles/grid.scss";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";
 import { MesSnackbarProvider } from "./components/MesSnackbarStacks";
-import { Provider } from "react-redux";
-import Dashboard from "./pages/WipDashboard/WipDashboard";
 import AIQuery from "./pages/AIQuery/AIQuery";
-import { wipStore } from "./store/store";
+import SingletPreview from "./pages/AIQuery/Preview"; // PREVIEW — swap back to AIQuery when done
 
 const App = () => {
 
@@ -21,9 +19,7 @@ const App = () => {
           colorCompoundBrandStrokeHover: "var(--color-accent)",
         }}
       >
-        <Provider store={wipStore}>
-          <AIQuery/>
-        </Provider>
+        <SingletPreview /> {/* PREVIEW — swap back to <AIQuery /> when done */}
       </FluentProvider>
     </MesSnackbarProvider>
   );

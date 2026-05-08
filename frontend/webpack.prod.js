@@ -15,7 +15,7 @@ module.exports = () => {
         name: "WIP",
         filename: "remoteEntry.js",
         exposes: {
-          "./WipDashboard": "./src/pages/WipDashboard/index.tsx",
+          "./WipDashboard": "./src/pages/AIQuery/components/WipDashboard/index.tsx",
         },
         shared: packageJson.dependencies,
       }),
