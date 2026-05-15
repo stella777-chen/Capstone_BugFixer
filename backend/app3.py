@@ -15,6 +15,7 @@ import os
 
 from dotenv import load_dotenv
 import os
+from orchestrator.service import handle_chat_ui
 
 load_dotenv()  # read .env file for environment variables
 
@@ -512,12 +513,18 @@ Value bindings:
 - ReworkRateDonut.rate = { "queryKey": "...", "path": "data.value", "fallback": 0 }
 - ReworkRateDonut.count = { "queryKey": "...", "path": "data.wip", "fallback": 0 }
 - Chart data refs must use path = "data.rows".
+- Data fields are required: chart components must include chartData, donut components must include rate and count, and DataTable must include values.
 
 Chart field bindings:
 - PieChart.chartData uses queryKey, path, labelField, valueField, optional colorField.
 - BarChart.chartData uses queryKey, path, nameField, valueField.
 - LineChart.chartData uses queryKey, path, nameField, yieldField.
 - ComboChart.chartData uses queryKey, path, nameField, barField, lineField.
+
+Visual styling:
+- Color fields are optional visual overrides.
+- Only include color fields when the user explicitly asks for specific colors or the source data provides meaningful color values.
+- If the user does not mention colors or styling, omit color fields and let the frontend use its default theme.
 
 Known response fields:
 - LotStatusDistribution rows: status, lotCount.
@@ -544,8 +551,6 @@ VALID EXAMPLE - ScrapRateDonut:
       "rate": { "queryKey": "q_scrap", "path": "data.value", "fallback": 0 },
       "count": { "queryKey": "q_scrap", "path": "data.wipCount", "fallback": 0 },
       "totalValue": 100,
-      "filledColor": "#D32F2F",
-      "backgroundColor": "#D3D3D3",
       "legendNames": ["Scrap Rate", "WIP Count"]
     }
   ]
@@ -567,7 +572,6 @@ VALID EXAMPLE - PieChart:
       "type": "PieChart",
       "headerText": "Lot Status",
       "description": "Lot count by current status",
-      "pieFallbackColor": "#62abf5",
       "chartData": {
         "queryKey": "q_lot_status",
         "path": "data.rows",
@@ -594,8 +598,6 @@ VALID EXAMPLE - ComboChart:
       "type": "ComboChart",
       "headerText": "Defects",
       "description": "Defect count and percentage by defect type",
-      "barColor": "#62abf5",
-      "lineColor": "#0078D4",
       "lineTotalValue": 100,
       "chartData": {
         "queryKey": "q_defects",
@@ -653,3 +655,29 @@ def generate_ui(req: Dict[str, Any] = Body(...)):
         return {"ok": False, "errors": errors}
 
     return {"ok": True, "uiConfig": ui_config}
+
+
+@app.post("/chat-ui")
+def chat_ui(req: Dict[str, Any] = Body(...)):
+    user_message = req.get("message") or req.get("prompt")
+    if not user_message or not isinstance(user_message, str) or not user_message.strip():
+        return {"ok": False, "errors": ["Message is required"]}
+
+    user_message = user_message.strip()
+    max_user_input_len = int(os.getenv("PROMPT_MAX_LENGTH", "2000"))
+    if len(user_message) > max_user_input_len:
+        return {
+            "ok": False,
+            "errors": [f"User message too long (max {max_user_input_len} chars, got {len(user_message)})"],
+        }
+
+    session_id = req.get("sessionId")
+    if session_id is not None and not isinstance(session_id, str):
+        return {"ok": False, "errors": ["sessionId must be a string when provided"]}
+
+    return handle_chat_ui(
+        client=deepseek_client,
+        session_id=session_id,
+        message=user_message,
+        validate_ui_schema=lambda ui_config: validate_with(ui_validator, ui_config),
+    )

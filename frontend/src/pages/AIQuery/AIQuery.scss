@@ -273,7 +273,8 @@
 .history-item {
   padding: 12px;
   border-radius: 6px;
-  background: var(--neutral-layer, #f9f9fb);
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(24, 24, 24, 0.08);
   margin-bottom: 8px;
 }
 .question { 
@@ -285,6 +286,10 @@
   margin-top: 6px; 
   color: #333;
   word-wrap: break-word;
+}
+
+.answer-layout {
+  margin-top: 10px;
 }
 
 @media (max-width: 900px) {

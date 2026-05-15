@@ -91,7 +91,7 @@
     "DataTableCard": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["type"],
+      "required": ["type", "values"],
       "properties": {
         "type": { "const": "DataTable" },
         "values": { "$ref": "#/$defs/DataTableValuesV1" }
@@ -105,7 +105,10 @@
       "properties": {
         "legend": { "type": "string" },
         "data": { "type": "number" },
-        "color": { "type": "string" }
+        "color": {
+          "type": "string",
+          "description": "Optional visual override for this slice. Only include when the user explicitly requests a specific color; otherwise omit and let the frontend use its default palette."
+        }
       }
     },
 
@@ -121,19 +124,25 @@
         },
         "labelField": { "type": "string" },
         "valueField": { "type": "string" },
-        "colorField": { "type": "string" }
+        "colorField": {
+          "type": "string",
+          "description": "Optional field containing per-row colors. Only include when the query response provides meaningful color values or the user explicitly requests color mapping; otherwise omit."
+        }
       }
     },
 
     "PieChartCard": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["type"],
+      "required": ["type", "chartData"],
       "properties": {
         "type": { "const": "PieChart" },
         "headerText": { "type": "string" },
         "description": { "type": "string" },
-        "pieFallbackColor": { "type": "string" },
+        "pieFallbackColor": {
+          "type": "string",
+          "description": "Optional visual override. Only include when the user explicitly requests a fallback pie slice color; otherwise omit and let the frontend use its default theme."
+        },
         "chartData": {
           "oneOf": [
             {
@@ -174,12 +183,15 @@
     "BarChartCard": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["type"],
+      "required": ["type", "chartData"],
       "properties": {
         "type": { "const": "BarChart" },
         "headerText": { "type": "string" },
         "description": { "type": "string" },
-        "barColor": { "type": "string" },
+        "barColor": {
+          "type": "string",
+          "description": "Optional visual override. Only include when the user explicitly requests a specific bar color; otherwise omit and let the frontend use its default theme."
+        },
         "maxLoadingTime": { "type": "number" },
         "chartData": {
           "oneOf": [
@@ -221,12 +233,15 @@
     "LineChartCard": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["type"],
+      "required": ["type", "chartData"],
       "properties": {
         "type": { "const": "LineChart" },
         "headerText": { "type": "string" },
         "description": { "type": "string" },
-        "lineColor": { "type": "string" },
+        "lineColor": {
+          "type": "string",
+          "description": "Optional visual override. Only include when the user explicitly requests a specific line color; otherwise omit and let the frontend use its default theme."
+        },
         "maxLoadingTime": { "type": "number" },
         "chartData": {
           "oneOf": [
@@ -270,13 +285,19 @@
     "ComboChartCard": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["type"],
+      "required": ["type", "chartData"],
       "properties": {
         "type": { "const": "ComboChart" },
         "headerText": { "type": "string" },
         "description": { "type": "string" },
-        "barColor": { "type": "string" },
-        "lineColor": { "type": "string" },
+        "barColor": {
+          "type": "string",
+          "description": "Optional visual override. Only include when the user explicitly requests a specific combo chart bar color; otherwise omit and let the frontend use its default theme."
+        },
+        "lineColor": {
+          "type": "string",
+          "description": "Optional visual override. Only include when the user explicitly requests a specific combo chart line color; otherwise omit and let the frontend use its default theme."
+        },
         "lineTotalValue": { "type": "number" },
         "totalCount": { "type": "number" },
         "chartData": {
@@ -301,7 +322,7 @@
     "DonutCardBase": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["type"],
+      "required": ["type", "rate", "count"],
       "properties": {
         "type": { "type": "string" },
         "headerText": { "type": "string" },
@@ -319,8 +340,14 @@
           ]
         },
         "totalValue": { "type": "number" },
-        "filledColor": { "type": "string" },
-        "backgroundColor": { "type": "string" },
+        "filledColor": {
+          "type": "string",
+          "description": "Optional visual override. Only include when the user explicitly requests a specific filled donut color; otherwise omit and let the frontend use its default theme."
+        },
+        "backgroundColor": {
+          "type": "string",
+          "description": "Optional visual override. Only include when the user explicitly requests a specific donut background color; otherwise omit and let the frontend use its default theme."
+        },
         "legendNames": { "$ref": "#/$defs/DonutLegendNamesV1" },
         "className": { "type": "string" },
         "maxLoadingTime": { "type": "number" }

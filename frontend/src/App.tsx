@@ -6,7 +6,6 @@ import "./assets/styles/grid.scss";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";
 import { MesSnackbarProvider } from "./components/MesSnackbarStacks";
 import AIQuery from "./pages/AIQuery/AIQuery";
-import SingletPreview from "./pages/AIQuery/Preview"; // PREVIEW — swap back to AIQuery when done
 
 const App = () => {
 
@@ -19,7 +18,7 @@ const App = () => {
           colorCompoundBrandStrokeHover: "var(--color-accent)",
         }}
       >
-        <SingletPreview /> {/* PREVIEW — swap back to <AIQuery /> when done */}
+        <AIQuery />
       </FluentProvider>
     </MesSnackbarProvider>
   );
