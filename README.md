@@ -171,14 +171,28 @@ POST /validate/ui
 ```
 Validates against `schemas/ui-config-v4.json`
 
-Example payload:
+Example payload (ScrapRate dashboard):
 ```json
 {
-  "version": "v4",
-  "layout": {
-    "type": "dashboard",
-    "widgets": []
-  }
+  "type": "MesPage",
+  "title": "Scrap Rate Dashboard",
+  "queries": {
+    "q_scrap": {
+      "metric": "ScrapRate",
+      "timeRange": "30d"
+    }
+  },
+  "children": [
+    {
+      "type": "ScrapRateDonut",
+      "headerText": "Scrap Rate",
+      "description": "Scrap rate and affected WIP count",
+      "rate": { "queryKey": "q_scrap", "path": "data.value", "fallback": 0 },
+      "count": { "queryKey": "q_scrap", "path": "data.wipCount", "fallback": 0 },
+      "totalValue": 100,
+      "legendNames": ["Scrap Rate", "WIP Count"]
+    }
+  ]
 }
 ```
 
