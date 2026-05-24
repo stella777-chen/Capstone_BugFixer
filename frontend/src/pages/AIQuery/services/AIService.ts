@@ -75,6 +75,16 @@ type GenerateUIResponse = {
   errors?: Array<{ path?: unknown[]; message?: string } | string>;
 };
 
+type ChatUIResponse = {
+  ok: boolean;
+  sessionId?: string;
+  status?: string;
+  question?: string;
+  requirements?: Record<string, unknown>;
+  uiConfig?: UIConfigV4;
+  errors?: Array<{ path?: unknown[]; message?: string } | string>;
+};
+
 type QueryResponse = {
   ok: boolean;
   data?: {
@@ -138,6 +148,9 @@ export type SendQueryDebugResult = {
   answer: string;
   health: BackendHealthDebug;
   flow: PromptFlowDebug;
+  sessionId?: string;
+  status?: string;
+  requirements?: Record<string, unknown>;
   uiConfig?: UIConfigV4;
   resolvedChildren?: UIChildV4[];
   queryResults?: QueryExecutionResult[];
@@ -697,7 +710,10 @@ export async function checkBackendHealth(): Promise<BackendHealthDebug> {
   }
 }
 
-export async function sendQueryWithDebug(prompt: string): Promise<SendQueryDebugResult> {
+export async function sendQueryWithDebug(
+  prompt: string,
+  sessionId?: string | null
+): Promise<SendQueryDebugResult> {
   const started = performance.now();
   const health = await checkBackendHealth();
   const backendBaseUrl = await resolveBackendBaseUrl(1200);
@@ -738,12 +754,15 @@ export async function sendQueryWithDebug(prompt: string): Promise<SendQueryDebug
   }
 
   try {
-    const generateResponse = await fetch(`${backendBaseUrl}/generate-ui`, {
+    const generateResponse = await fetch(`${backendBaseUrl}/chat-ui`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ prompt: trimmedPrompt }),
+      body: JSON.stringify({
+        message: trimmedPrompt,
+        ...(sessionId ? { sessionId } : {}),
+      }),
     });
 
     flow.generateUiStatusCode = generateResponse.status;
@@ -758,10 +777,39 @@ export async function sendQueryWithDebug(prompt: string): Promise<SendQueryDebug
       };
     }
 
-    const generated = (await generateResponse.json()) as GenerateUIResponse;
+    const generated = (await generateResponse.json()) as ChatUIResponse;
     const parsedUiConfig = sanitizeGeneratedUiConfig(generated.uiConfig);
 
-    if (!generated.ok || !parsedUiConfig) {
+    if (!generated.ok) {
+      const message = buildErrorMessage("Failed to generate dashboard", generated.errors);
+      flow.elapsedMs = Math.round(performance.now() - started);
+      flow.lastError = message;
+      return {
+        answer: message,
+        health,
+        flow,
+        sessionId: generated.sessionId,
+        status: generated.status,
+        requirements: generated.requirements,
+        uiConfig: parsedUiConfig ?? generated.uiConfig,
+      };
+    }
+
+    if (generated.status === "need_clarification") {
+      const answer = generated.question?.trim() || "I need a bit more information before I can build the dashboard.";
+      flow.elapsedMs = Math.round(performance.now() - started);
+      return {
+        answer,
+        health,
+        flow,
+        sessionId: generated.sessionId,
+        status: generated.status,
+        requirements: generated.requirements,
+        uiConfig: parsedUiConfig ?? generated.uiConfig,
+      };
+    }
+
+    if (!parsedUiConfig) {
       const message = buildErrorMessage("Failed to generate schema-valid ui-config-v4", generated.errors);
       flow.elapsedMs = Math.round(performance.now() - started);
       flow.lastError = message;
@@ -769,6 +817,9 @@ export async function sendQueryWithDebug(prompt: string): Promise<SendQueryDebug
         answer: message,
         health,
         flow,
+        sessionId: generated.sessionId,
+        status: generated.status,
+        requirements: generated.requirements,
       };
     }
 
@@ -841,6 +892,9 @@ export async function sendQueryWithDebug(prompt: string): Promise<SendQueryDebug
       answer: buildUserAnswer(uiConfig.title, componentTypes, queryResults, queryNormalizationNotes),
       health,
       flow,
+      sessionId: generated.sessionId,
+      status: generated.status,
+      requirements: generated.requirements,
       uiConfig,
       resolvedChildren,
       queryResults,

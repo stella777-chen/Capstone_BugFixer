@@ -20,6 +20,8 @@ type HistoryItem = {
   q: string;
   a: string;
   layout: GeneratedCardLayout | null;
+  status?: string;
+  sessionId?: string;
 };
 
 const SUPPORTED_CARD_TYPES = new Set<CardType>([
@@ -67,6 +69,7 @@ const AIQuery: React.FC = () => {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [isDisabled, setIsDisabled] = useState(true);
   const [health, setHealth] = useState<BackendHealthDebug | null>(null);
   const [flow, setFlow] = useState<PromptFlowDebug | null>(null);
@@ -77,18 +80,36 @@ const AIQuery: React.FC = () => {
 
   const handleSend = async () => {
     if (!query.trim() || loading) return;
+    const submittedQuery = query.trim();
     setLoading(true);
     try {
-      const result = await sendQueryWithDebug(query);
+      const result = await sendQueryWithDebug(submittedQuery, sessionId);
       const answer = result.answer;
-      const item = { q: query, a: answer, layout: mapResultToLayout(result) };
+      const nextSessionId = result.sessionId ?? sessionId ?? undefined;
+      const item = {
+        q: submittedQuery,
+        a: answer,
+        layout: mapResultToLayout(result),
+        status: result.status,
+        sessionId: nextSessionId,
+      };
       setHistory((h) => [item, ...h]);
+      setSessionId(result.sessionId ?? sessionId);
       setHealth(result.health);
       setFlow(result.flow);
       setQuery("");
+      setIsDisabled(true);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleResetConversation = () => {
+    setHistory([]);
+    setSessionId(null);
+    setHealth(null);
+    setFlow(null);
+    inputChanged("");
   };
 
   function inputChanged(input: React.SetStateAction<string>) {
@@ -110,6 +131,9 @@ const AIQuery: React.FC = () => {
           <div className="history-item" key={idx}>
             <div className="question">Q: {h.q}</div>
             <div className="answer">A: {h.a}</div>
+            {h.status === "need_clarification" && (
+              <div className="answer-status">Awaiting clarification in current session.</div>
+            )}
             {h.layout && (
               <div className="answer-layout">
                 <CardLayout
@@ -153,6 +177,7 @@ const AIQuery: React.FC = () => {
                 {loading ? "Thinking..." : "Send"}
               </Button>
               <Button onClick={() => inputChanged("")} className="clear-btn">Clear</Button>
+              <Button onClick={handleResetConversation} className="clear-btn">New Chat</Button>
               <span className="composer-hint">Ctrl/Cmd+Enter to Submit Query</span>
             </div>
           </div>
