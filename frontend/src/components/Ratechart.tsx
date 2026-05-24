@@ -33,32 +33,43 @@ const RatingChart: React.FC<RatingChartProps> = ({
   ];
 
   return (
-    <div style={{ textAlign: "center", position: "relative", flex: 1}}>
-      <ResponsiveContainer width="100%" height={230}>
+    <div style={{ textAlign: "center", position: "relative", flex: 1, minHeight: 260 }}>
+      <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie
             data={data}
             cx="50%"
-            cy="80%"
+            cy="72%"
             startAngle={180}
             endAngle={0}
-            innerRadius={90}
-            outerRadius={120}
+            innerRadius={82}
+            outerRadius={112}
             dataKey="value"
           >
             <Cell fill={filledColor} />
             <Cell fill={backgroundColor} />
           </Pie>
           <Tooltip formatter={(value, name) => tooltipContent ? [tooltipContent(value as number, name as string)] : [value, name]} />
-          <Legend verticalAlign="bottom" align="center"/>
+          <Legend
+            verticalAlign="bottom"
+            align="center"
+            wrapperStyle={{
+              bottom: -6,
+              fontSize: 12,
+              lineHeight: "16px",
+            }}
+            iconSize={10}
+          />
         </PieChart>
       </ResponsiveContainer>
       <h2 style={{
         position: "absolute",
-        top: "50%",
+        top: "58%",
         left: "50%",
         transform: "translate(-50%, -50%)",
-        fontSize: "3.5vh"
+        fontSize: "3vh",
+        margin: 0,
+        whiteSpace: "nowrap"
       }}>
         {displayValue}
       </h2>

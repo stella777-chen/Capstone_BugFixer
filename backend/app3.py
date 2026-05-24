@@ -280,15 +280,12 @@ def fetch_lot_status_distribution(time_range: str, start: str | None, end: str |
     clause, params = build_record_date_filter(time_range, "wip_lot_status", start, end)
     sql = f"""
         SELECT
-            CAST(date AS CHAR) AS date,
-            CAST(week_start_date AS CHAR) AS weekStartDate,
-            CAST(month_start_date AS CHAR) AS monthStartDate,
             status,
             SUM(lot_count) AS lotCount
         FROM wip_lot_status
         WHERE filter_type = 'today' AND {clause}
-        GROUP BY date, week_start_date, month_start_date, status
-        ORDER BY date ASC, status ASC
+        GROUP BY status
+        ORDER BY lotCount DESC, status ASC
     """
     with get_db_connection() as conn:
         with conn.cursor(dictionary=True) as cursor:
@@ -626,6 +623,184 @@ VALID EXAMPLE - ComboChart:
 
     return json.loads(content)
 
+
+def _is_object(value: Any) -> bool:
+    return isinstance(value, dict)
+
+
+def _resolve_child_query_key(child: dict[str, Any], queries: dict[str, Any]) -> str | None:
+    for field_name in ("rate", "count", "chartData"):
+        field_value = child.get(field_name)
+        if isinstance(field_value, dict):
+            query_key = field_value.get("queryKey")
+            if isinstance(query_key, str) and query_key in queries:
+                return query_key
+
+    for query_key in queries:
+        return query_key
+
+    return None
+
+
+def _normalize_query_for_child(query: dict[str, Any], child_type: str) -> None:
+    metric = query.get("metric")
+    if metric == "DefectDistribution":
+        query["dimension"] = "defect_type"
+    elif metric == "WipAgingDistribution":
+        query["dimension"] = "aging_bucket"
+    elif metric == "LotStatusDistribution":
+        query["dimension"] = "lot_status"
+    elif metric == "YieldRate":
+        existing_dimension = query.get("dimension")
+        if existing_dimension not in ("line", "date"):
+            query["dimension"] = "date" if child_type == "LineChart" else "line"
+    else:
+        query.pop("dimension", None)
+
+
+def _normalize_child_bindings(child: dict[str, Any], query_key: str, query: dict[str, Any]) -> None:
+    child_type = child.get("type")
+    metric = query.get("metric")
+
+    if child_type == "ScrapRateDonut" and metric == "ScrapRate":
+        child["rate"] = {"queryKey": query_key, "path": "data.value", "fallback": 0}
+        child["count"] = {"queryKey": query_key, "path": "data.wipCount", "fallback": 0}
+        child["totalValue"] = child.get("totalValue", 100)
+        child["legendNames"] = child.get("legendNames") or ["Scrap Rate", "WIP Count"]
+        return
+
+    if child_type == "ReworkRateDonut" and metric == "ReworkRate":
+        child["rate"] = {"queryKey": query_key, "path": "data.value", "fallback": 0}
+        child["count"] = {"queryKey": query_key, "path": "data.wip", "fallback": 0}
+        child["totalValue"] = child.get("totalValue", 100)
+        child["legendNames"] = child.get("legendNames") or ["Rework Rate", "WIP Count"]
+        return
+
+    if child_type == "LineChart" and metric == "YieldRate":
+        dimension = query.get("dimension", "date")
+        child["chartData"] = {
+            "queryKey": query_key,
+            "path": "data.rows",
+            "nameField": "date" if dimension == "date" else "line",
+            "yieldField": "yield",
+        }
+        return
+
+    if child_type == "BarChart":
+        if metric == "YieldRate":
+            dimension = query.get("dimension", "line")
+            child["chartData"] = {
+                "queryKey": query_key,
+                "path": "data.rows",
+                "nameField": "date" if dimension == "date" else "line",
+                "valueField": "yield",
+            }
+            return
+        if metric == "LotStatusDistribution":
+            child["chartData"] = {
+                "queryKey": query_key,
+                "path": "data.rows",
+                "nameField": "status",
+                "valueField": "lotCount",
+            }
+            return
+        if metric == "WipAgingDistribution":
+            child["chartData"] = {
+                "queryKey": query_key,
+                "path": "data.rows",
+                "nameField": "agingBucket",
+                "valueField": "lotCount",
+            }
+            return
+        if metric == "DefectDistribution":
+            child["chartData"] = {
+                "queryKey": query_key,
+                "path": "data.rows",
+                "nameField": "defectCode",
+                "valueField": "defectCount",
+            }
+            return
+
+    if child_type == "PieChart":
+        if metric == "LotStatusDistribution":
+            child["chartData"] = {
+                "queryKey": query_key,
+                "path": "data.rows",
+                "labelField": "status",
+                "valueField": "lotCount",
+            }
+            return
+        if metric == "WipAgingDistribution":
+            child["chartData"] = {
+                "queryKey": query_key,
+                "path": "data.rows",
+                "labelField": "agingBucket",
+                "valueField": "lotCount",
+            }
+            return
+        if metric == "DefectDistribution":
+            child["chartData"] = {
+                "queryKey": query_key,
+                "path": "data.rows",
+                "labelField": "defectCode",
+                "valueField": "defectCount",
+            }
+            return
+
+    if child_type == "ComboChart" and metric == "DefectDistribution":
+        child["lineTotalValue"] = child.get("lineTotalValue", 100)
+        child["chartData"] = {
+            "queryKey": query_key,
+            "path": "data.rows",
+            "nameField": "defectCode",
+            "barField": "defectCount",
+            "lineField": "totalDefectPercentage",
+        }
+
+
+def normalize_generated_ui_config(ui_config: dict[str, Any]) -> dict[str, Any]:
+    if not _is_object(ui_config):
+        return ui_config
+
+    queries = ui_config.get("queries")
+    children = ui_config.get("children")
+    if not isinstance(queries, dict) or not isinstance(children, list):
+        return ui_config
+
+    normalized_queries: dict[str, Any] = {}
+    for query_key, query in queries.items():
+        if isinstance(query_key, str) and isinstance(query, dict):
+            normalized_queries[query_key] = dict(query)
+
+    normalized_children: list[dict[str, Any]] = []
+    for child in children:
+        if not isinstance(child, dict):
+            continue
+        normalized_child = dict(child)
+        child_type = normalized_child.get("type")
+        if not isinstance(child_type, str):
+            normalized_children.append(normalized_child)
+            continue
+
+        query_key = _resolve_child_query_key(normalized_child, normalized_queries)
+        if not query_key:
+            normalized_children.append(normalized_child)
+            continue
+
+        query = normalized_queries.get(query_key)
+        if not isinstance(query, dict):
+            normalized_children.append(normalized_child)
+            continue
+
+        _normalize_query_for_child(query, child_type)
+        _normalize_child_bindings(normalized_child, query_key, query)
+        normalized_children.append(normalized_child)
+
+    normalized_config = dict(ui_config)
+    normalized_config["queries"] = normalized_queries
+    normalized_config["children"] = normalized_children
+    return normalized_config
+
 @app.post("/generate-ui")
 def generate_ui(req: Dict[str, Any] = Body(...)):
     # Get user input prompt (from frontend)
@@ -648,6 +823,8 @@ def generate_ui(req: Dict[str, Any] = Body(...)):
         ui_config = call_llm_generate_ui(user_prompt)
     except Exception as e:
         return {"ok": False, "errors": [f"LLM error: {str(e)}"]}
+
+    ui_config = normalize_generated_ui_config(ui_config)
 
     # Schema validation
     ok, errors = validate_with(ui_validator, ui_config)

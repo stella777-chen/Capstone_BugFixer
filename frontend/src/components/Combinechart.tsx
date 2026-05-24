@@ -7,7 +7,8 @@ import {
   YAxis, 
   Tooltip, 
   Legend, 
-  ResponsiveContainer 
+  ResponsiveContainer,
+  CartesianGrid
 } from "recharts";
 
 interface CombinedChartProps {
@@ -60,11 +61,13 @@ const CombinedChart: React.FC<CombinedChartProps> = ({
     <div ref={containerRef} style={{ width: "100%", height: "100%", minHeight }}>
       <ResponsiveContainer width="100%" height={height}>
         <ComposedChart data={chartData}>
+        <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
         <XAxis
           dataKey="name"
           axisLine={false}
           tickLine={false}
           interval={0}
+          tick={{ fontSize: 12, fill: "#475569" }}
         />
         {/* Left Y-axis follows provided totalCount; otherwise falls back to data max. */}
         <YAxis
@@ -74,6 +77,7 @@ const CombinedChart: React.FC<CombinedChartProps> = ({
           tickLine={false}
           domain={[0, safeLeftMax]}
           ticks={[0, leftMid, safeLeftMax]}
+          tick={{ fontSize: 12, fill: "#475569" }}
         />
         {/* Right Y-axis for percentage values (0-100%) */}
         <YAxis
@@ -84,6 +88,7 @@ const CombinedChart: React.FC<CombinedChartProps> = ({
           domain={[0, 100]}
           ticks={[0, 50, 100]}
           tickFormatter={(value) => `${value}%`}
+          tick={{ fontSize: 12, fill: "#475569" }}
         />
         <Tooltip 
           formatter={(value, name) => {
@@ -102,7 +107,7 @@ const CombinedChart: React.FC<CombinedChartProps> = ({
           yAxisId="left"
           dataKey="barValue"
           fill={barColor}
-          radius={[5, 5, 0, 0]}
+          radius={[6, 6, 0, 0]}
           name="barValue"
         />
         <Line
@@ -110,9 +115,9 @@ const CombinedChart: React.FC<CombinedChartProps> = ({
           type="monotone"
           dataKey="linePercentValue"
           stroke={lineColor}
-          strokeWidth={2}
-          dot={{ r: 4, fill: lineColor }}
-          activeDot={{ r: 6 }}
+          strokeWidth={3}
+          dot={{ r: 4, fill: lineColor, stroke: "#ffffff", strokeWidth: 1.5 }}
+          activeDot={{ r: 6, stroke: "#ffffff", strokeWidth: 2 }}
           name="linePercentValue"
         />
         </ComposedChart>

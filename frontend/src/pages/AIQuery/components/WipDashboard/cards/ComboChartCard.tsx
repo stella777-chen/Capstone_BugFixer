@@ -18,8 +18,8 @@ const ComboChartCard: React.FC<ComboChartCardProps> = ({
   headerText = "Defects",
   description = "Identify key defect sources",
   chartData = [],
-  barColor = "#62abf5",
-  lineColor = "#0078D4",
+  barColor = "#2563EB",
+  lineColor = "#EA580C",
   lineTotalValue = 100,
   totalCount,
 }) => {

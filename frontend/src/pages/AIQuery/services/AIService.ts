@@ -436,7 +436,9 @@ function readPath(source: unknown, path?: string): unknown {
     return source;
   }
 
-  return path
+  const normalizedPath = path.startsWith("data.") ? path.slice("data.".length) : path;
+
+  return normalizedPath
     .split(".")
     .filter(Boolean)
     .reduce<unknown>((accumulator, segment) => {
@@ -542,6 +544,29 @@ function mapRows(
   return rowsValue.filter(isObject).map(mapper);
 }
 
+const PIE_LEGEND_COLOR_MAP: Record<string, string> = {
+  Cancelled: "#E57373",
+  Finished: "#66BB6A",
+  Hold: "#FFB74D",
+  NotStarted: "#90A4AE",
+  WorkInProcess: "#42A5F5",
+};
+
+const PIE_FALLBACK_PALETTE = [
+  "#42A5F5",
+  "#66BB6A",
+  "#FFB74D",
+  "#AB47BC",
+  "#26A69A",
+  "#EF5350",
+  "#5C6BC0",
+  "#FFA726",
+];
+
+function colorForPieLegend(legend: string, index: number): string {
+  return PIE_LEGEND_COLOR_MAP[legend] ?? PIE_FALLBACK_PALETTE[index % PIE_FALLBACK_PALETTE.length];
+}
+
 function resolveBoundValue(
   value: unknown,
   queryResponsesByKey: Record<string, QueryResponse>,
@@ -554,13 +579,19 @@ function resolveBoundValue(
 
   if (isPieChartDataRefV1(value)) {
     bindingCounter.count += 1;
-    return mapRows(queryResponsesByKey, value.queryKey, value.path, (row) => ({
-      legend: String(row[value.labelField] ?? ""),
-      data: Number(row[value.valueField] ?? 0),
-      ...(typeof value.colorField === "string" && typeof row[value.colorField] === "string"
-        ? { color: row[value.colorField] }
-        : {}),
-    }));
+    return mapRows(queryResponsesByKey, value.queryKey, value.path, (row) => row).map((row, index) => {
+      const legend = String(row[value.labelField] ?? "");
+      const explicitColor =
+        typeof value.colorField === "string" && typeof row[value.colorField] === "string"
+          ? String(row[value.colorField])
+          : undefined;
+
+      return {
+        legend,
+        data: Number(row[value.valueField] ?? 0),
+        color: explicitColor ?? colorForPieLegend(legend, index),
+      };
+    });
   }
 
   if (isBarChartDataRefV1(value)) {
