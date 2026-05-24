@@ -396,3 +396,8 @@ This will initialize the database schema and seed data from `wip_dashboard.sql`.
 **Last Updated**: May 2026
 **Latest Schema Versions**: UIConfigV4, QueryAPIV1
 
+## Local DB environment
+- Use Homebrew MySQL only
+- Do not use legacy /usr/local/mysql instance
+- Expected port: 3306
+- Expected login: root with empty password
